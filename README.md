@@ -1,5 +1,7 @@
 # advent of code 2021
 
+[![tyler-hoffman](https://circleci.com/gh/tyler-hoffman/aoc-2021.svg?style=svg)](https://circleci.com/gh/tyler-hoffman/aoc-2021)
+
 Python edition
 
 ## Getting started

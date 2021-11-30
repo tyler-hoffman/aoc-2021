@@ -14,6 +14,6 @@ Python edition
 | Deactivate virtual env          | `deactivate` |
 | Run all tests                   | `python -m unittest` |
 | Run specific test file          | `python -m unittest <FILE>` |
-| Run solution file               | `src.day_<DAY>.<PART>` |
-| Bootstrap files for new problem | `python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` |
+| Run solution file               | `python -m src.day_<DAY>.<PART>` (where `DAY` has a leading zero if needed) |
+| Bootstrap files for new problem | `python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` (where `DAY` has a leading zero if needed) |
 | Format code                     | `python -m black .` |

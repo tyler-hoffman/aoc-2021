@@ -26,7 +26,9 @@ def create_part_files(file_data: FileData) -> None:
 
     with open(file_data.test_part_file, "w") as f:
         content = TEST_PART_TEMPLATE.format(
-            day_string=file_data.day_string, part=file_data.part
+            day_string=file_data.day_string,
+            part=file_data.part,
+            part_upper=file_data.part.upper(),
         )
         f.write(content.strip() + "\n")
 

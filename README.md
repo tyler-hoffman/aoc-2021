@@ -10,7 +10,7 @@ Python edition
 ## Commands to run
 | Purpose                         | Command |
 |---------------------------------|---------|
-| Use virtual env                 | `python3 -m venv venv` |
+| Use virtual env                 | `source venv/bin/activate` |
 | Deactivate virtual env          | `deactivate` |
 | Run all tests                   | `python -m unittest` |
 | Run specific test file          | `python -m unittest <FILE>` |

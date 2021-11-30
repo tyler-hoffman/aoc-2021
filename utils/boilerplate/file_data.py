@@ -4,6 +4,10 @@ from typing import Literal, Union
 
 @dataclasses.dataclass
 class FileData(object):
+    """Dataclass to handle any directory/file names
+    to be used when bootstrapping files
+    """
+
     day: int
     part: Union[Literal["a"], Literal["b"]]
 
@@ -29,15 +33,15 @@ class FileData(object):
 
     @property
     def test_part_file(self) -> str:
-        return f"./test/test_day_{self.day_string}/test_{self.part}.py"
+        return f"{self.test_directory}/test_{self.part}.py"
 
     @property
     def src_init_file(self) -> str:
-        return self.init_file(self.directory)
+        return self._init_file(self.directory)
 
     @property
     def test_init_file(self) -> str:
-        return self.init_file(self.test_directory)
+        return self._init_file(self.test_directory)
 
-    def init_file(self, directory: str) -> str:
+    def _init_file(self, directory: str) -> str:
         return f"{directory}/__init__.py"

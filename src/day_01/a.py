@@ -1,4 +1,4 @@
-from src.day_01.shared import parse
+from src.day_01.shared import count_ascending, parse
 from src.utils.iterators import sliding_window
 
 
@@ -7,7 +7,7 @@ def solve(input: str) -> int:
 
     adjacent_items = sliding_window(numbers, 2)
 
-    return len([a for a, b in adjacent_items if b > a])
+    return count_ascending(adjacent_items)
 
 
 if __name__ == "__main__":

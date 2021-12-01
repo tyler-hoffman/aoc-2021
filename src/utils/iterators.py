@@ -5,4 +5,10 @@ T = TypeVar("T")
 
 
 def sliding_window(items: List[T], size: int) -> List[Tuple[T, ...]]:
-    return list(zip(*[items[x : len(items) + size - 1 - x] for x in range(size)]))
+    zip_parts = []
+    end_offset = len(items) + size - 1
+    for offset in range(size):
+        zip_parts.append(items[offset : end_offset - offset])
+
+    for window in zip(*zip_parts):
+        yield window

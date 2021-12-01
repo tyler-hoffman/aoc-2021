@@ -22,5 +22,6 @@ class TestDay01A(unittest.TestCase):
         self.assertEqual(solve(SAMPLE_INPUT), 7)
 
     def test_solution(self):
-        input = open("src/day_01/input.txt", "r").read()
+        with open("src/day_01/input.txt", "r") as f:
+            input = f.read()
         self.assertEqual(solve(input), 1228)

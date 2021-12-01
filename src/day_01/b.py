@@ -1,4 +1,5 @@
-from src.day_01.shared import parse, sliding_window
+from src.day_01.shared import parse
+from src.utils.iterators import sliding_window
 
 
 def solve(input: str) -> int:

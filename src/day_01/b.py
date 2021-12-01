@@ -1,3 +1,4 @@
+from typing import List, Tuple
 from src.day_01.shared import count_ascending, parse
 from src.utils.iterators import sliding_window
 

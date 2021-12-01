@@ -1,9 +1,9 @@
-from typing import List, Tuple, TypeVar
+from typing import Iterator, List, Tuple, TypeVar
 
 T = TypeVar("T")
 
 
-def sliding_window(items: List[T], size: int) -> List[Tuple[T, ...]]:
+def sliding_window(items: List[T], size: int) -> Iterator[Tuple[T, ...]]:
     zip_parts: List[List[T]] = []
     end_offset = len(items) + size - 1
 

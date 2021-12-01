@@ -19,3 +19,8 @@ Python edition
 | Run solution file               | `python -m src.day_<DAY>.<PART>` (where `DAY` has a leading zero if needed) |
 | Bootstrap files for new problem | `python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` (where `DAY` has a leading zero if needed) |
 | Format code                     | `python -m black .` |
+
+## Handy links
+* [AoC](https://adventofcode.com/2021)
+* [Repo](https://github.com/tyler-hoffman/aoc-2021)
+* [CI](https://app.circleci.com/pipelines/github/tyler-hoffman/aoc-2021)

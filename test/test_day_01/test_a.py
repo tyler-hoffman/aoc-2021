@@ -16,6 +16,7 @@ SAMPLE_INPUT = """
 263
 """
 
+
 class TestDay01A(unittest.TestCase):
     def test_solve(self):
         self.assertEqual(solve(SAMPLE_INPUT), 7)

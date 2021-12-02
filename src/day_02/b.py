@@ -8,12 +8,13 @@ def follow_directions(directions: List[Direction]) -> Point:
     aim = 0
 
     for direction in directions:
-        if isinstance(direction, Up):
-            aim -= direction.x
-        elif isinstance(direction, Down):
-            aim += direction.x
-        else:
-            point = point.add(Point(x=direction.x, y=direction.x * aim))
+        match direction:
+            case Up(value=value):
+                aim -= direction.value
+            case Down(value=value):
+                aim += direction.value
+            case _:
+                point = point.add(Point(x=direction.value, y=direction.value * aim))
     return point
 
 

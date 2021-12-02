@@ -21,7 +21,7 @@ jobs:
           pkg-manager: pip
       - run:
           name: Check formatting
-          command: python -m black --check .
+          command: python -m black --check . --target-version py310
 workflows:
   test:
     jobs:

@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-          pkg-manager: pip
+          pkg-manager: poetry
       - run:
           name: Run tests
           command: python -m unittest
@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-          pkg-manager: pip
+          pkg-manager: poetry
       - run:
           name: Check formatting
           command: python -m black --check . --target-version py310

@@ -1,0 +1,27 @@
+[project]
+name = "Advent of Code 2021"
+version = ""
+description = "Python 3.10 implementation of 2021's Advent of Code"
+authors = [
+    {name = "Tyler Hoffman", email = "tyler.c.hoffman@gmail.com"},
+]
+dependencies = [
+    "black<22,>=21.11b1",
+    "parameterized~=0.8",
+]
+requires-python = ">=3.10"
+license = {text = "None"}
+
+[project.urls]
+homepage = ""
+
+[tool]
+[tool.pdm]
+[[tool.pdm.source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"

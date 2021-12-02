@@ -1,3 +1,4 @@
+import aocd
 import os
 
 from utils.boilerplate.file_data import FileData
@@ -10,7 +11,9 @@ def create_directories_if_needed(file_data: FileData) -> None:
     if not os.path.isdir(file_data.directory):
         os.makedirs(file_data.directory)
         open(file_data.src_init_file, "x")
-        open(file_data.input_file, "x")
+        with open(file_data.input_file, "w")as f:
+            content = aocd.get_data(year=2021, day=file_data.day)
+            f.write(content)
 
     if not os.path.isdir(file_data.test_directory):
         os.makedirs(file_data.test_directory)

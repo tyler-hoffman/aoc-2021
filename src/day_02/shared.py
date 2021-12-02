@@ -3,23 +3,21 @@ from src.utils.point import Point
 from typing import List
 
 
+@dataclasses.dataclass
 class Direction(object):
-    x: int
+    value: int
 
 
-@dataclasses.dataclass
 class Up(Direction):
-    x: int
+    pass
 
 
-@dataclasses.dataclass
 class Down(Direction):
-    x: int
+    pass
 
 
-@dataclasses.dataclass
 class Forward(Direction):
-    x: int
+    pass
 
 
 def parse_line(line: str) -> Direction:
@@ -27,11 +25,11 @@ def parse_line(line: str) -> Direction:
     magnitude = int(magnitude_string)
 
     if direction == "up":
-        return Up(x=magnitude)
+        return Up(value=magnitude)
     elif direction == "down":
-        return Down(x=magnitude)
+        return Down(value=magnitude)
     elif direction == "forward":
-        return Forward(x=magnitude)
+        return Forward(value=magnitude)
     else:
         raise Exception(f"Unexpected direction: {direction}")
 

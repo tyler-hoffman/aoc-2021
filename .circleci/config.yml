@@ -2,33 +2,30 @@ version: 2.1
 orbs:
   python: circleci/python@1.2
 jobs:
-  build:
+  build-and-test:
     docker:
       - image: cimg/python:3.10
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-  test:
-    docker:
-      - image: cimg/python:3.10
-    steps:
       - run:
           name: Run tests
           command: python -m unittest
-  formatting-check:
+  build-and-check-formatting:
     docker:
       - image: cimg/python:3.10
     steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
       - run:
           name: Check formatting
           command: python -m black --check .
 workflows:
   test:
     jobs:
-      - build
-      - test
+      - build-and-test
   check-formatting:
     jobs:
-      - build
-      - formatting-check
+      - build-and-check-formatting

@@ -2,7 +2,7 @@
 
 [![tyler-hoffman](https://circleci.com/gh/tyler-hoffman/aoc-2021.svg?style=svg)](https://circleci.com/gh/tyler-hoffman/aoc-2021)
 
-Python edition
+Python 3.10 edition
 
 ## Getting started
 1. `python3 -m venv venv`

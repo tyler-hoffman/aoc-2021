@@ -12,9 +12,10 @@ def solve(input: str) -> int:
 
     return count_ascending(adjacent_sums)
 
-
-if __name__ == "__main__":
+def solve_for_file() -> int:
     with open("src/day_01/input.txt", "r") as f:
         input = f.read()
-    output = solve(input)
-    print(output)
+    return solve(input)
+
+if __name__ == "__main__":
+    print(solve_for_file())

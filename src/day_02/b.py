@@ -14,7 +14,7 @@ def follow_directions(directions: List[Direction]) -> Point:
             case Down(value=value):
                 aim += direction.value
             case _:
-                point = point + Point(x=direction.value, y=direction.value * aim)
+                point += Point(x=direction.value, y=direction.value * aim)
     return point
 
 

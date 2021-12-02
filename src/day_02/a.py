@@ -9,11 +9,11 @@ def follow_directions(directions: List[Direction]) -> Point:
     for direction in directions:
         match direction:
             case Up(value=value):
-                point = point + Point(x=0, y=-direction.value)
+                point += Point(x=0, y=-direction.value)
             case Down(value=value):
-                point = point + Point(x=0, y=direction.value)
+                point += Point(x=0, y=direction.value)
             case _:
-                point = point + Point(x=direction.value, y=0)
+                point += Point(x=direction.value, y=0)
     return point
 
 

@@ -2,16 +2,20 @@ import dataclasses
 from src.utils.point import Point
 from typing import List
 
+
 class Direction(object):
     x: int
+
 
 @dataclasses.dataclass
 class Up(Direction):
     x: int
 
+
 @dataclasses.dataclass
 class Down(Direction):
     x: int
+
 
 @dataclasses.dataclass
 class Forward(Direction):

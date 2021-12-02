@@ -5,14 +5,15 @@ from src.utils.point import Point
 
 def follow_directions(directions: List[Direction]) -> Point:
     point = Point(x=0, y=0)
+    aim = 0
 
     for direction in directions:
         if isinstance(direction, Up):
-            point = point.add(Point(x=0, y=-direction.x))
+            aim -= direction.x
         elif isinstance(direction, Down):
-            point = point.add(Point(x=0, y=direction.x))
+            aim += direction.x
         else:
-            point = point.add(Point(x=direction.x, y=0))
+            point = point.add(Point(x=direction.x, y=direction.x * aim))
     return point
 
 

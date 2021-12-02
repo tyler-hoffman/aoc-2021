@@ -7,12 +7,13 @@ def follow_directions(directions: List[Direction]) -> Point:
     point = Point(x=0, y=0)
 
     for direction in directions:
-        if isinstance(direction, Up):
-            point = point.add(Point(x=0, y=-direction.value))
-        elif isinstance(direction, Down):
-            point = point.add(Point(x=0, y=direction.value))
-        else:
-            point = point.add(Point(x=direction.value, y=0))
+        match direction:
+            case Up(value=value):
+                point = point.add(Point(x=0, y=-direction.value))
+            case Down(value=value):
+                point = point.add(Point(x=0, y=direction.value))
+            case _:
+                point = point.add(Point(x=direction.value, y=0))
     return point
 
 

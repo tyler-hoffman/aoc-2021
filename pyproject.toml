@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "black<22,>=21.11b1",
     "parameterized~=0.8",
+    "mypy~=0.910",
 ]
 requires-python = ">=3.10"
 license = {text = "None"}

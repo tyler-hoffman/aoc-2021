@@ -5,20 +5,17 @@
 Python 3.10 edition
 
 ## Getting started
-1. `python3 -m venv venv`
-1. `source venv/bin/activate`
-1. `python3 -m pip install --requirement requirements.txt`
+1. Make sure you have [Poetry](https://python-poetry.org/) installed
+1. `poetry install`
 
 ## Commands to run
 | Purpose                         | Command |
 |---------------------------------|---------|
-| Use virtual env                 | `source venv/bin/activate` |
-| Deactivate virtual env          | `deactivate` |
-| Run all tests                   | `python -m unittest` |
-| Run specific test file          | `python -m unittest <FILE>` |
-| Run solution file               | `python -m src.day_<DAY>.<PART>` (where `DAY` has a leading zero if needed) |
-| Bootstrap files for new problem | `python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` (where `DAY` has a leading zero if needed) |
-| Format code                     | `python -m black .` |
+| Run all tests                   | `poetry run python -m unittest` |
+| Run specific test file          | `poetry run python -m unittest <FILE>` |
+| Run solution file               | `poetry run python -m src.day_<DAY>.<PART>` (where `DAY` has a leading zero if needed) |
+| Bootstrap files for new problem | `poetry run python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` (where `DAY` has a leading zero if needed) |
+| Format code                     | `poetry run python -m black . --target-version py310` |
 
 ## Handy links
 * [AoC](https://adventofcode.com/2021)

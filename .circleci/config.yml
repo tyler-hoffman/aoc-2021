@@ -11,7 +11,7 @@ jobs:
           pkg-manager: poetry
       - run:
           name: Run tests
-          command: python -m unittest
+          command: poetry run python -m unittest
   build-and-check-formatting:
     docker:
       - image: cimg/python:3.10
@@ -21,7 +21,7 @@ jobs:
           pkg-manager: poetry
       - run:
           name: Check formatting
-          command: python -m black --check . --target-version py310
+          command: poetry run python -m black --check . --target-version py310
 workflows:
   test:
     jobs:

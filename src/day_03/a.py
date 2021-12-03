@@ -19,15 +19,16 @@ def get_gamma_bits(lines: List[str]) -> List[str]:
             raise Exception(f"Unknown winner at index {index}")
     return output
 
+
 def inverse_bits(bits: List[str]) -> List[str]:
     return ["0" if bit == "1" else "1" for bit in bits]
+
 
 def solve(input: str) -> int:
     lines = parse(input)
 
     gamma_bits = get_gamma_bits(lines)
     epsilon_bits = inverse_bits(gamma_bits)
-
 
     return array_to_int(gamma_bits) * array_to_int(epsilon_bits)
 

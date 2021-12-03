@@ -4,9 +4,15 @@
 
 Python 3.10 edition
 
+## Notes on the repo
+* Package management is done with [Poetry](https://python-poetry.org/)]
+* utils in the `utils/` directory can/should be used to bootstrap new directories/files for solutions
+* utils in the `utils/` derectory require [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data), which relies on my session cookie. So don't use those unless you are me.
+
 ## Getting started
 1. Make sure you have [Poetry](https://python-poetry.org/) installed
 1. `poetry install`
+1. If you are using utils that use `advent-of-code-data`, have my adventofcode session cookie stored in `~/.config/aocd/token` (note that this may be tricky if you are not me)
 
 ## Commands to run
 | Purpose                         | Command |

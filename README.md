@@ -6,8 +6,10 @@ Python 3.10 edition
 
 ## Notes on the repo
 * Package management is done with [Poetry](https://python-poetry.org/)
-* utils in the `utils/` directory can/should be used to bootstrap new directories/files for solutions
-* utils in the `utils/` derectory require [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data), which relies on my session cookie. So don't use those unless you are me.
+* Utils in the `utils/` directory can/should be used to bootstrap new directories/files for solutions
+* Some parts of this repo are specific to the problems I receive (e.g. this won't entirely scale for non-me people)
+    * utils in the `utils/` derectory require [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data), which relies on my session cookie. So don't use those unless you are me.
+    * To make refactoring safer, after completing a problem, a test will be added asserting that my input produces the right output. If you aren't me, your input/output probably don't match.
 
 ## Getting started
 1. Make sure you have [Poetry](https://python-poetry.org/) installed

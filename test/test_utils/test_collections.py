@@ -13,5 +13,5 @@ class TestFrequencyMap(unittest.TestCase):
             (["a", "b", "a"], {"a": 2, "b": 1}),
         ]
     )
-    def test_sliding_window(self, input: List[str], expected: Dict[str, int]):
+    def test_frequency_map(self, input: List[str], expected: Dict[str, int]):
         self.assertEqual(frequency_map(input), expected)

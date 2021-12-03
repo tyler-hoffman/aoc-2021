@@ -2,7 +2,7 @@ import aocd
 import argparse
 import subprocess
 
-from utils.boilerplate.file_data import FileData
+from utils.file_data import FileData
 
 
 def submit(day: int, part: str) -> None:

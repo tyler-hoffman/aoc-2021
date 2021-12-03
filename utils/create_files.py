@@ -11,7 +11,7 @@ def create_directories_if_needed(file_data: FileData) -> None:
     if not os.path.isdir(file_data.directory):
         os.makedirs(file_data.directory)
         open(file_data.src_init_file, "x")
-        with open(file_data.input_file, "w")as f:
+        with open(file_data.input_file, "w") as f:
             content = aocd.get_data(year=2021, day=file_data.day)
             f.write(content)
 
@@ -34,6 +34,7 @@ def create_part_files(file_data: FileData) -> None:
             part_upper=file_data.part.upper(),
         )
         f.write(content.strip() + "\n")
+
 
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(

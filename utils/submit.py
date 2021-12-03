@@ -12,7 +12,7 @@ def submit(day: int, part: str) -> None:
     )
     answer = completed_process.stdout.decode("utf-8").strip()
 
-    aocd.submit(day=2, part="a", year=2020, answer=answer)
+    aocd.submit(day=day, part=part, year=2021, answer=answer)
 
 
 def create_parser() -> argparse.ArgumentParser:

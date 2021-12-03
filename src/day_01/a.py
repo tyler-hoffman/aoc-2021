@@ -13,5 +13,4 @@ def solve(input: str) -> int:
 if __name__ == "__main__":
     with open("src/day_01/input.txt", "r") as f:
         input = f.read()
-    output = solve(input)
-    print(output)
+    print(input)

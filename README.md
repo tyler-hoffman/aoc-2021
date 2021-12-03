@@ -14,8 +14,9 @@ Python 3.10 edition
 | Run all tests                   | `poetry run python -m unittest` |
 | Run specific test file          | `poetry run python -m unittest <FILE>` |
 | Run solution file               | `poetry run python -m src.day_<DAY>.<PART>` (where `DAY` has a leading zero if needed) |
-| Bootstrap files for new problem | `poetry run python -m utils.boilerplate.boilerplate -d <DAY> -p <PART>` (where `DAY` has a leading zero if needed) |
 | Format code                     | `poetry run python -m black . --target-version py310` |
+| Bootstrap files for new problem | `poetry run python -m utils.create_files -d <DAY> -p <PART>` |
+| Submit solution                 | `poetry run python -m utils.submit -d <DAY> -p <PART>` |
 
 ## Handy links
 * [AoC](https://adventofcode.com/2021)

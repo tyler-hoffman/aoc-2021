@@ -21,7 +21,6 @@ class RatingFinder(ABC):
 
     def filter_lines(self, lines: List[str]) -> str:
         line_len = len(lines[0])
-        winning_bit: str = ""
         for index in range(line_len):
             if len(lines) == 1:
                 break

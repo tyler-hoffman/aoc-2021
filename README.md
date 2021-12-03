@@ -5,7 +5,7 @@
 Python 3.10 edition
 
 ## Notes on the repo
-* Package management is done with [Poetry](https://python-poetry.org/)]
+* Package management is done with [Poetry](https://python-poetry.org/)
 * utils in the `utils/` directory can/should be used to bootstrap new directories/files for solutions
 * utils in the `utils/` derectory require [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data), which relies on my session cookie. So don't use those unless you are me.
 

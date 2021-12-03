@@ -12,6 +12,7 @@ def submit(day: int, part: str) -> None:
     )
     answer = completed_process.stdout.decode("utf-8").strip()
 
+    print(f"Submitting answer: {answer}")
     aocd.submit(day=day, part=part, year=2021, answer=answer)
 
 

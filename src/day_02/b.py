@@ -25,10 +25,7 @@ def solve(input: str) -> int:
 
     return point.x * point.y
 
-def solve_for_file() -> int:
+if __name__ == "__main__":
     with open("src/day_02/input.txt", "r") as f:
         input = f.read()
-    return solve(input)
-
-if __name__ == "__main__":
-    print(solve_for_file())
+    print(input)

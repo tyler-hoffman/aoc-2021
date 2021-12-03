@@ -1,6 +1,6 @@
 import unittest
 
-from src.day_02.a import solve_for_file, solve
+from src.day_02.a import solve
 
 
 SAMPLE_DATA = """
@@ -18,4 +18,6 @@ class TestDay02A(unittest.TestCase):
         self.assertEqual(solve(SAMPLE_DATA), 150)
 
     def test_solution(self):
-        self.assertEqual(solve_for_file(), 2117664)
+        with open("src/day_02/input.txt", "r") as f:
+            input = f.read()
+        self.assertEqual(solve(input), 2117664)

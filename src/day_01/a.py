@@ -9,10 +9,7 @@ def solve(input: str) -> int:
 
     return count_ascending(adjacent_items)
 
-def solve_for_file() -> int:
+if __name__ == "__main__":
     with open("src/day_01/input.txt", "r") as f:
         input = f.read()
-    return solve(input)
-
-if __name__ == "__main__":
-    print(solve_for_file())
+    print(input)

@@ -10,7 +10,7 @@ def solve(input: str) -> int:
     for item in data.picks:
         to_check.add(item)
 
-        for i, board in enumerate(remaining_boards):
+        for board in remaining_boards:
             if board.has_match(to_check):
                 if len(remaining_boards) > 1:
                     remaining_boards.remove(board)

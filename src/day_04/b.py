@@ -6,16 +6,16 @@ def solve(input: str) -> int:
     data = parse(input)
     remaining_boards = data.boards.copy()
 
-    to_check: Set[int] = set()
-    for item in data.picks:
-        to_check.add(item)
+    drawn: Set[int] = set()
+    for item in data.draws:
+        drawn.add(item)
 
         for board in remaining_boards:
-            if board.has_match(to_check):
+            if board.wins(drawn):
                 if len(remaining_boards) > 1:
                     remaining_boards.remove(board)
                 else:
-                    unmarked = board.unmarked_stuff(to_check)
+                    unmarked = board.unmarked_stuff(drawn)
                     return sum(unmarked) * item
 
 

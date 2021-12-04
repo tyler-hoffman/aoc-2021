@@ -3,7 +3,7 @@ import re
 from typing import List, Set
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Board(object):
     lines: List[List[int]]
 

@@ -2,6 +2,7 @@ import dataclasses
 import re
 from typing import List, Set
 
+
 @dataclasses.dataclass
 class Board(object):
     lines: List[List[int]]
@@ -30,10 +31,12 @@ class Board(object):
 
         return output
 
+
 @dataclasses.dataclass
 class Data(object):
     boards: List[Board]
     picks: List[int]
+
 
 def parse(input: str) -> Data:
     lines = input.strip().splitlines()
@@ -43,9 +46,8 @@ def parse(input: str) -> Data:
 
     for index in range(2, len(lines), 6):
         board_data: List[List[int]] = []
-        for line in lines[index:index+5]:
+        for line in lines[index : index + 5]:
             board_data.append([int(x) for x in re.split("\s+", line.strip())])
         boards.append(Board(lines=board_data))
 
     return Data(boards=boards, picks=picks)
-

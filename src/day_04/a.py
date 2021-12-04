@@ -1,4 +1,3 @@
-
 from typing import List, Set
 from src.day_04.shared import parse
 

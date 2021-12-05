@@ -1,24 +1,12 @@
 import unittest
 
+from .sample_data import SAMPLE_DATA
 from src.day_01.b import solve
-
-SAMPLE_INPUT = """
-199
-200
-208
-210
-200
-207
-240
-269
-260
-263
-"""
 
 
 class TestDay01B(unittest.TestCase):
     def test_solve(self):
-        self.assertEqual(solve(SAMPLE_INPUT), 5)
+        self.assertEqual(solve(SAMPLE_DATA), 5)
 
     def test_solution(self):
         with open("src/day_01/input.txt", "r") as f:

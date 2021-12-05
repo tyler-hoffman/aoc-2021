@@ -1,23 +1,8 @@
 import unittest
 
+from .sample_data import SAMPLE_DATA
 from src.day_03.b import C02ScrubberRatingFinder, OxygenGeneratorRatingFinder, solve
 from src.day_03.shared import parse
-
-
-SAMPLE_DATA = """
-00100
-11110
-10110
-10111
-10101
-01111
-00111
-11100
-10000
-11001
-00010
-01010
-"""
 
 
 class TestDay03B(unittest.TestCase):

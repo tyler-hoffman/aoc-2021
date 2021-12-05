@@ -1,22 +1,22 @@
-from typing import Set
-from src.day_04.shared import parse
+from typing import Optional
+from src.day_04.parser import parse
+from src.day_04.solver import Solver, WinningState
+
+
+class Day04PartBSolver(Solver):
+    @property
+    def solution(self) -> int:
+        winning_state: Optional[WinningState] = None
+        for state in self._winning_states:
+            winning_state = state
+        assert winning_state is not None
+        return winning_state.score
 
 
 def solve(input: str) -> int:
     data = parse(input)
-    remaining_boards = data.boards.copy()
-
-    drawn: Set[int] = set()
-    for item in data.draws:
-        drawn.add(item)
-
-        for board in remaining_boards:
-            if board.wins(drawn):
-                if len(remaining_boards) > 1:
-                    remaining_boards.remove(board)
-                else:
-                    unmarked = board.unmarked_stuff(drawn)
-                    return sum(unmarked) * item
+    solver = Day04PartBSolver(boards=data.boards, draws=data.draws)
+    return solver.solution
 
 
 if __name__ == "__main__":

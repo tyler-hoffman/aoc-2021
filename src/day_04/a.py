@@ -1,18 +1,18 @@
-from typing import Set
-from src.day_04.shared import parse
+from src.day_04.parser import parse
+from src.day_04.solver import Solver
+
+
+class Day04PartASolver(Solver):
+    @property
+    def solution(self) -> int:
+        winning_state = next(self._winning_states)
+        return winning_state.score
 
 
 def solve(input: str) -> int:
     data = parse(input)
-
-    to_check: Set[int] = set()
-    for item in data.draws:
-        to_check.add(item)
-
-        for board in data.boards:
-            if board.wins(to_check):
-                unmarked = board.unmarked_stuff(to_check)
-                return sum(unmarked) * item
+    solver = Day04PartASolver(boards=data.boards, draws=data.draws)
+    return solver.solution
 
 
 if __name__ == "__main__":

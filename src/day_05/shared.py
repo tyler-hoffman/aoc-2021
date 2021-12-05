@@ -16,22 +16,17 @@ def get_points_in_line(line: Line) -> List[Point]:
         if b.y < a.y:
             a, b = b, a
         return [Point(x=a.x, y=y) for y in range(a.y, b.y + 1)]
-    elif a.x < b.x and a.y < b.y:
-        xs = range(a.x, b.x + 1)
-        ys = range(a.y, b.y + 1)
-        return [Point(x=x, y=y) for x, y in zip(xs, ys)]
-    elif a.x < b.x and a.y > b.y:
-        xs = range(a.x, b.x + 1)
-        ys = range(a.y, b.y - 1, -1)
-        return [Point(x=x, y=y) for x, y in zip(xs, ys)]
-    elif a.x > b.x and a.y < b.y:
-        xs = range(a.x, b.x - 1, -1)
-        ys = range(a.y, b.y + 1)
-        return [Point(x=x, y=y) for x, y in zip(xs, ys)]
     else:
-        xs = range(a.x, b.x - 1, -1)
-        ys = range(a.y, b.y - 1, -1)
-        return [Point(x=x, y=y) for x, y in zip(xs, ys)]
+        if b.x < a.x:
+            a, b = b, a
+        if a.y < b.y:
+            xs = range(a.x, b.x + 1)
+            ys = range(a.y, b.y + 1)
+            return [Point(x=x, y=y) for x, y in zip(xs, ys)]
+        else:
+            xs = range(a.x, b.x + 1)
+            ys = range(a.y, b.y - 1, -1)
+            return [Point(x=x, y=y) for x, y in zip(xs, ys)]
 
 
 class Parser(object):

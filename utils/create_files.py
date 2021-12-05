@@ -4,7 +4,10 @@ import os
 
 from utils.file_data import FileData
 from utils.templates.part import PART_TEMPLATE
+from utils.templates.parser import PARSER_TEMPLATE
+from utils.templates.solver import SOLVER_TEMPLATE
 from utils.templates.test_part import TEST_PART_TEMPLATE
+from utils.templates.test_data import TEST_DATA_TEMPLATE
 
 
 def create_directories_if_needed(file_data: FileData) -> None:
@@ -21,12 +24,21 @@ def create_directories_if_needed(file_data: FileData) -> None:
 
 
 def create_part_files(file_data: FileData) -> None:
+    with open(file_data.parser_file, "w") as f:
+        content = PARSER_TEMPLATE.format(day_string=file_data.day_string)
+        f.write(content.strip() + "\n")
+    with open(file_data.solver_file, "w") as f:
+        content = SOLVER_TEMPLATE.format(day_string=file_data.day_string)
+        f.write(content.strip() + "\n")
     with open(file_data.part_file, "w") as f:
         content = PART_TEMPLATE.format(
             day_string=file_data.day_string, part=file_data.part
         )
         f.write(content.strip() + "\n")
 
+    with open(file_data.test_data_file, "w") as f:
+        content = TEST_DATA_TEMPLATE
+        f.write(content.strip() + "\n")
     with open(file_data.test_part_file, "w") as f:
         content = TEST_PART_TEMPLATE.format(
             day_string=file_data.day_string,

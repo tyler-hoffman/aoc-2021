@@ -1,5 +1,5 @@
 from typing import Optional
-from src.day_04.parser import parse
+from src.day_04.parser import Parser
 from src.day_04.solver import Solver, WinningState
 
 
@@ -14,7 +14,8 @@ class Day04PartBSolver(Solver):
 
 
 def solve(input: str) -> int:
-    data = parse(input)
+    parser = Parser()
+    data = parser.parse(input)
     solver = Day04PartBSolver(boards=data.boards, draws=data.draws)
     return solver.solution
 

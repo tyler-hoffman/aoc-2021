@@ -11,16 +11,17 @@ class Data(object):
     draws: List[int]
 
 
-def parse(input: str) -> Data:
-    lines = input.strip().splitlines()
+class Parser(object):
+    def parse(self, input: str) -> Data:
+        lines = input.strip().splitlines()
 
-    draws = [int(x) for x in lines[0].split(",")]
-    boards: List[Board] = []
+        draws = [int(x) for x in lines[0].split(",")]
+        boards: List[Board] = []
 
-    for index in range(2, len(lines), 6):
-        board_data: List[List[int]] = []
-        for line in lines[index : index + 5]:
-            board_data.append([int(x) for x in re.split("\s+", line.strip())])
-        boards.append(Board(lines=board_data))
+        for index in range(2, len(lines), 6):
+            board_data: List[List[int]] = []
+            for line in lines[index : index + 5]:
+                board_data.append([int(x) for x in re.split("\s+", line.strip())])
+            boards.append(Board(lines=board_data))
 
-    return Data(boards=boards, draws=draws)
+        return Data(boards=boards, draws=draws)

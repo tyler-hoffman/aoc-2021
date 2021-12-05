@@ -1,4 +1,4 @@
-from src.day_04.parser import parse
+from src.day_04.parser import Parser
 from src.day_04.solver import Solver
 
 
@@ -10,7 +10,8 @@ class Day04PartASolver(Solver):
 
 
 def solve(input: str) -> int:
-    data = parse(input)
+    parser = Parser()
+    data = parser.parse(input)
     solver = Day04PartASolver(boards=data.boards, draws=data.draws)
     return solver.solution
 

@@ -1,6 +1,4 @@
-from typing import Dict
-from src.day_05.shared import Parser, get_points_in_line
-from src.utils.point import Point
+from src.day_05.shared import Parser, Solver
 
 
 def solve(input: str) -> int:
@@ -8,12 +6,8 @@ def solve(input: str) -> int:
     lines = [
         line for line in parser.parse(input) if line.is_vertical or line.is_horizontal
     ]
-    visits: Dict[Point, int] = {}
-    for line in lines:
-        for point in get_points_in_line(line):
-            visits[point] = visits.get(point, 0) + 1
 
-    return len([v for v in visits.values() if v > 1])
+    return Solver(lines).solution
 
 
 if __name__ == "__main__":

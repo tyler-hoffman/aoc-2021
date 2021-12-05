@@ -1,22 +1,45 @@
 import re
+from dataclasses import dataclass
 from functools import cached_property
-from typing import List
+from typing import Dict, List
 
 from src.utils.line import Line
 from src.utils.point import Point
 
 
-def get_points_in_line(line: Line) -> List[Point]:
-    a, b = line.a, line.b
-    if line.is_horizontal:
+@dataclass
+class Solver(object):
+    lines: List[Line]
+
+    @property
+    def solution(self):
+        visits: Dict[Point, int] = {}
+        for line in self.lines:
+            for point in self._get_points_in_line(line):
+                visits[point] = visits.get(point, 0) + 1
+
+        return len([v for v in visits.values() if v > 1])
+
+    def _get_points_in_line(self, line: Line) -> List[Point]:
+        a, b = line.a, line.b
+        if line.is_horizontal:
+            return self._get_points_between_horizontal(a, b)
+        elif line.is_vertical:
+            return self._get_points_between_vertical(a, b)
+        else:
+            return self._get_points_between_diagonal(a, b)
+
+    def _get_points_between_horizontal(self, a: Point, b: Point) -> List[Point]:
         if b.x < a.x:
             a, b = b, a
         return [Point(x=x, y=a.y) for x in range(a.x, b.x + 1)]
-    elif line.is_vertical:
+
+    def _get_points_between_vertical(self, a: Point, b: Point) -> List[Point]:
         if b.y < a.y:
             a, b = b, a
         return [Point(x=a.x, y=y) for y in range(a.y, b.y + 1)]
-    else:
+
+    def _get_points_between_diagonal(self, a: Point, b: Point) -> List[Point]:
         if b.x < a.x:
             a, b = b, a
         if a.y < b.y:

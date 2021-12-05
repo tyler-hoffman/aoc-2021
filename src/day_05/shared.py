@@ -10,18 +10,18 @@ def get_points_in_line(line: Line) -> List[Point]:
     a, b = line.a, line.b
     if line.is_horizontal:
         if b.x < a.x:
-            a,b=b,a
+            a, b = b, a
 
         return [Point(x=x, y=a.y) for x in range(a.x, b.x + 1)]
     elif line.is_vertical:
         if b.y < a.y:
-            a,b=b,a
+            a, b = b, a
         return [Point(x=a.x, y=y) for y in range(a.y, b.y + 1)]
     else:
         raise Exception("Diagonal line detected!")
 
-class Parser(object):
 
+class Parser(object):
     @cached_property
     def regex_pattern(self) -> re.Pattern:
         return re.compile(r"\d+")

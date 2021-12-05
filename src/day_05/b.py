@@ -1,5 +1,6 @@
 from typing import List
-from src.day_05.shared import Parser, Solver
+from src.day_05.parser import Parser
+from src.day_05.solver import Solver
 from src.utils.line import Line
 
 

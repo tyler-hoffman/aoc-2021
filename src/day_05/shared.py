@@ -9,7 +9,7 @@ from src.utils.point import Point
 
 
 @dataclass
-class Solver(object):
+class Solver(ABC):
     lines: List[Line]
 
     @property

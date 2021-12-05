@@ -9,12 +9,15 @@ from utils.templates.solver import SOLVER_TEMPLATE
 from utils.templates.test_part import TEST_PART_TEMPLATE
 from utils.templates.test_data import TEST_DATA_TEMPLATE
 
+
 def touch_file(path: str) -> None:
     open(path, "x")
+
 
 def write_file(path: str, content: str) -> None:
     with open(path, "w") as f:
         f.write(content.strip() + "\n")
+
 
 def create_directories_if_needed(file_data: FileData) -> None:
     if not os.path.isdir(file_data.directory):
@@ -28,18 +31,26 @@ def create_directories_if_needed(file_data: FileData) -> None:
 
 
 def create_part_files(file_data: FileData) -> None:
-    write_file(file_data.parser_file, PARSER_TEMPLATE.format(day_string=file_data.day_string))
-    write_file(file_data.solver_file, SOLVER_TEMPLATE.format(day_string=file_data.day_string))
-    write_file(file_data.part_file, PART_TEMPLATE.format(
-        day_string=file_data.day_string, part=file_data.part
-    ))
+    write_file(
+        file_data.parser_file, PARSER_TEMPLATE.format(day_string=file_data.day_string)
+    )
+    write_file(
+        file_data.solver_file, SOLVER_TEMPLATE.format(day_string=file_data.day_string)
+    )
+    write_file(
+        file_data.part_file,
+        PART_TEMPLATE.format(day_string=file_data.day_string, part=file_data.part),
+    )
 
     write_file(file_data.test_data_file, TEST_DATA_TEMPLATE)
-    write_file(file_data.test_part_file, TEST_PART_TEMPLATE.format(
-        day_string=file_data.day_string,
-        part=file_data.part,
-        part_upper=file_data.part.upper(),
-    ))
+    write_file(
+        file_data.test_part_file,
+        TEST_PART_TEMPLATE.format(
+            day_string=file_data.day_string,
+            part=file_data.part,
+            part_upper=file_data.part.upper(),
+        ),
+    )
 
 
 def create_parser() -> argparse.ArgumentParser:

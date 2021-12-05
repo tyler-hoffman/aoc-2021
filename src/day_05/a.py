@@ -1,13 +1,19 @@
+from typing import List
 from src.day_05.shared import Parser, Solver
+from src.utils.line import Line
+
+
+class Day05PartASolver(Solver):
+    @property
+    def filtered_lines(self) -> List[Line]:
+        return [line for line in self.lines if line.is_horizontal or line.is_vertical]
 
 
 def solve(input: str) -> int:
     parser = Parser()
-    lines = [
-        line for line in parser.parse(input) if line.is_vertical or line.is_horizontal
-    ]
+    solver = Day05PartASolver(parser.parse(input))
 
-    return Solver(lines).solution
+    return solver.solution
 
 
 if __name__ == "__main__":

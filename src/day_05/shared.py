@@ -1,4 +1,5 @@
 import re
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Dict, List
@@ -14,11 +15,16 @@ class Solver(object):
     @property
     def solution(self):
         visits: Dict[Point, int] = {}
-        for line in self.lines:
+        for line in self.filtered_lines:
             for point in self._get_points_in_line(line):
                 visits[point] = visits.get(point, 0) + 1
 
         return len([v for v in visits.values() if v > 1])
+
+    @property
+    @abstractmethod
+    def filtered_lines(self) -> List[Line]:
+        ...
 
     def _get_points_in_line(self, line: Line) -> List[Point]:
         a, b = line.a, line.b

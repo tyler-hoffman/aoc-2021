@@ -12,3 +12,8 @@ class TestDay06A(unittest.TestCase):
     ])
     def test_solve(self, days: int, expected: int):
         self.assertEqual(solve(SAMPLE_DATA, days), expected)
+
+    def test_solution(self):
+        with open("src/day_06/input.txt", "r") as f:
+            input = f.read()
+        self.assertEqual(solve(input, 80), 386640)

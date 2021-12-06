@@ -11,9 +11,12 @@ class Solver(ABC):
     days: int
 
     @property
-    @abstractmethod
     def solution(self) -> int:
-        ...
+        days_passed = 0
+        for freq in self._frequencies_at_days():
+            days_passed += 1
+            if days_passed == self.days:
+                return sum(freq.values())
 
     def _frequencies_at_days(self) -> Iterator[Dict[int, int]]:
         freqs = frequency_map(self.starting_values)

@@ -1,23 +1,10 @@
-from dataclasses import dataclass
-from typing import List
 from src.day_06.parser import Parser
 from src.day_06.solver import Solver
-
-@dataclass
-class Day06PartBSolver(Solver):
-
-    @property
-    def solution(self) -> int:
-        days_passed = 0
-        for freq in self._frequencies_at_days():
-            days_passed += 1
-            if days_passed == self.days:
-                return sum(freq.values())
 
 
 def solve(input: str, days: int) -> int:
     parser = Parser()
-    solver = Day06PartBSolver(parser.parse(input), days)
+    solver = Solver(parser.parse(input), days)
 
     return solver.solution
 

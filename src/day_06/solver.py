@@ -1,25 +1,23 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from more_itertools import nth
 from typing import Dict, Iterator, List
 
 from src.utils.collections import frequency_map
 
 
 @dataclass
-class Solver(ABC):
+class Solver(object):
     starting_values: List[int]
     days: int
 
     @property
     def solution(self) -> int:
-        days_passed = 0
-        for freq in self._frequencies_at_days():
-            days_passed += 1
-            if days_passed == self.days:
-                return sum(freq.values())
+        freq = nth(self._frequencies_at_days(), self.days)
+        return sum(freq.values())
 
     def _frequencies_at_days(self) -> Iterator[Dict[int, int]]:
         freqs = frequency_map(self.starting_values)
+        yield freqs
 
         while True:
             new_freqs = {(k - 1): v for k, v in freqs.items()}

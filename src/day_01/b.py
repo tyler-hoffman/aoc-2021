@@ -1,16 +1,22 @@
-from typing import List, Tuple
-from src.day_01.shared import count_ascending, parse
+from src.day_01.parser import Parser
+from src.day_01.solver import Solver
 from src.utils.iterators import sliding_window
 
 
+class Day01BSolver(Solver):
+    @property
+    def solution(self) -> int:
+        triples = sliding_window(self.numbers, 3)
+        sums = [sum(t) for t in triples]
+        adjacent_sums = sliding_window(sums, 2)
+
+        return self.count_ascending(adjacent_sums)
+
+
 def solve(input: str) -> int:
-    numbers = parse(input)
-
-    triples = sliding_window(numbers, 3)
-    sums = [sum(t) for t in triples]
-    adjacent_sums = sliding_window(sums, 2)
-
-    return count_ascending(adjacent_sums)
+    parser = Parser()
+    solver = Day01BSolver(numbers=parser.parse(input))
+    return solver.solution
 
 
 if __name__ == "__main__":

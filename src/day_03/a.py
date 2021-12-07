@@ -1,36 +1,47 @@
+from functools import cached_property
 from typing import List
-from src.day_03.shared import array_to_int, parse
-from src.utils.collections import frequency_map
+
+from src.day_03.parser import Parser
+from src.day_03.solver import LineAnalyzer, Solver
 
 
-def get_gamma_bits(lines: List[str]) -> List[str]:
-    line_len = len(lines[0])
-    output: List[str] = []
-    for index in range(line_len):
-        freqs = frequency_map([line[index] for line in lines])
-        zero_count = freqs.get("0", 0)
-        one_count = freqs.get("1", 0)
+class Day03ASolver(Solver):
+    @property
+    def solution(self) -> int:
+        return self.array_to_int(self.gamma_bits) * self.array_to_int(self.epsilon_bits)
 
-        if zero_count > one_count:
-            output.append("0")
-        elif one_count > zero_count:
-            output.append("1")
-        else:
-            raise Exception(f"Unknown winner at index {index}")
-    return output
+    @cached_property
+    def line_analyzer(self) -> LineAnalyzer:
+        return LineAnalyzer(self.lines)
 
+    @property
+    def gamma_bits(self) -> List[str]:
+        output: List[str] = []
+        for index in range(self.line_analyzer.line_length):
+            zero_count, one_count = self.line_analyzer.zeros_and_ones_for_position(
+                index
+            )
+            if zero_count > one_count:
+                output.append("0")
+            elif one_count > zero_count:
+                output.append("1")
+            else:
+                raise Exception(f"Unknown winner at index {index}")
+        return output
 
-def inverse_bits(bits: List[str]) -> List[str]:
-    return ["0" if bit == "1" else "1" for bit in bits]
+    @cached_property
+    def epsilon_bits(self) -> List[str]:
+        return ["0" if bit == "1" else "1" for bit in self.gamma_bits]
+
+    @staticmethod
+    def array_to_int(bits: List[str]) -> int:
+        as_str = "".join(bits)
+        return int(as_str, 2)
 
 
 def solve(input: str) -> int:
-    lines = parse(input)
-
-    gamma_bits = get_gamma_bits(lines)
-    epsilon_bits = inverse_bits(gamma_bits)
-
-    return array_to_int(gamma_bits) * array_to_int(epsilon_bits)
+    solver = Day03ASolver(lines=Parser.parse(input))
+    return solver.solution
 
 
 if __name__ == "__main__":

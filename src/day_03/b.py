@@ -1,33 +1,33 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from dataclasses import dataclass
+from functools import cached_property
+from typing import List
 
-from src.day_03.shared import parse
-from src.utils.collections import frequency_map
-
-
-def solve(input: str) -> int:
-    lines = parse(input)
-
-    o2_rating = OxygenGeneratorRatingFinder().find_rating(lines)
-    c02_rating = C02ScrubberRatingFinder().find_rating(lines)
-
-    return o2_rating * c02_rating
+from src.day_03.parser import Parser
+from src.day_03.solver import LineAnalyzer, Solver
 
 
+@dataclass
 class RatingFinder(ABC):
-    def find_rating(self, lines: List[str]) -> int:
-        rating_string = self.filter_lines(lines)
+    lines: List[str]
+
+    @abstractmethod
+    def select_winning_bit(self, zero_count, one_count: int) -> str:
+        ...
+
+    @property
+    def rating(self) -> int:
+        rating_string = self.filtered_lines
         return int(rating_string, 2)
 
-    def filter_lines(self, lines: List[str]) -> str:
-        line_len = len(lines[0])
-        for index in range(line_len):
-            if len(lines) == 1:
+    @property
+    def filtered_lines(self) -> str:
+        lines = self.lines.copy()
+        for index in range(len(lines[0])):
+            line_analyzer = LineAnalyzer(lines)
+            if line_analyzer.line_count == 1:
                 break
-
-            freqs = frequency_map([line[index] for line in lines])
-            zero_count = freqs.get("0", 0)
-            one_count = freqs.get("1", 0)
+            zero_count, one_count = line_analyzer.zeros_and_ones_for_position(index)
             winning_bit = self.select_winning_bit(
                 zero_count=zero_count, one_count=one_count
             )
@@ -36,10 +36,6 @@ class RatingFinder(ABC):
 
         assert len(lines) == 1
         return lines[0]
-
-    @abstractmethod
-    def select_winning_bit(self, zero_count, one_count: int) -> str:
-        ...
 
 
 class OxygenGeneratorRatingFinder(RatingFinder):
@@ -50,6 +46,20 @@ class OxygenGeneratorRatingFinder(RatingFinder):
 class C02ScrubberRatingFinder(RatingFinder):
     def select_winning_bit(self, zero_count, one_count: int) -> str:
         return "0" if zero_count <= one_count else "1"
+
+
+class Day03BSolver(Solver):
+    @property
+    def solution(self):
+        o2_finder = OxygenGeneratorRatingFinder(self.lines)
+        c02_finder = C02ScrubberRatingFinder(self.lines)
+
+        return o2_finder.rating * c02_finder.rating
+
+
+def solve(input: str) -> int:
+    solver = Day03BSolver(lines=Parser.parse(input))
+    return solver.solution
 
 
 if __name__ == "__main__":

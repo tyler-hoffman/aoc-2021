@@ -1,20 +1,21 @@
 import unittest
 
+from src.day_03.parser import Parser
+
 from .sample_data import SAMPLE_DATA
 from src.day_03.b import C02ScrubberRatingFinder, OxygenGeneratorRatingFinder, solve
-from src.day_03.shared import parse
 
 
 class TestDay03B(unittest.TestCase):
     def test_oxygen(self):
-        input = parse(SAMPLE_DATA)
-        finder = OxygenGeneratorRatingFinder()
-        self.assertEqual(finder.filter_lines(input), "10111")
+        lines = Parser.parse(SAMPLE_DATA)
+        finder = OxygenGeneratorRatingFinder(lines=lines)
+        self.assertEqual(finder.filtered_lines, "10111")
 
     def test_co2(self):
-        input = parse(SAMPLE_DATA)
-        finder = C02ScrubberRatingFinder()
-        self.assertEqual(finder.filter_lines(input), "01010")
+        lines = Parser.parse(SAMPLE_DATA)
+        finder = C02ScrubberRatingFinder(lines=lines)
+        self.assertEqual(finder.filtered_lines, "01010")
 
     def test_solve(self):
         self.assertEqual(solve(SAMPLE_DATA), 230)

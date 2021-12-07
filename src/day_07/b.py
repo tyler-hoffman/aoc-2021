@@ -4,7 +4,6 @@ from src.day_07.solver import Solver
 
 
 class Day07PartBSolver(Solver):
-
     @staticmethod
     @cache
     def move_cost(dist: int) -> int:

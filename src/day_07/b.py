@@ -1,19 +1,18 @@
-from functools import cached_property
+from functools import cache, cached_property
 from typing import Dict
 from src.day_07.parser import Parser
 from src.day_07.solver import Solver
 
 
 class Day07PartBSolver(Solver):
-    @cached_property
-    def cost_map(self) -> Dict[int, int]:
-        output = [0]
-        for i in range(1, self.max_pos - self.min_pos + 1):
-            output.append(i + output[i - 1])
-        return output
 
-    def move_cost(self, dist: int) -> int:
-        return self.cost_map[dist]
+    @staticmethod
+    @cache
+    def move_cost(dist: int) -> int:
+        if dist == 0:
+            return 0
+        else:
+            return dist + Day07PartBSolver.move_cost(dist - 1)
 
 
 def solve(input: str) -> int:

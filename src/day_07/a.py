@@ -42,29 +42,20 @@ class Day07PartASolver(Solver):
 
     @cached_property
     def left_move_costs(self) -> Dict[int, int]:
-        positions = self.valid_positions_reversed
-        start = PositionInfo(cost=0, crabs=self.starting_frequencies[positions[0]])
-        data: Dict[int, PositionInfo] = {
-            positions[0]: start
-        }
-
-        for p in positions[1:]:
-            prev = data[p+1]
-            crabs_at_pos = self.starting_frequencies.get(p, 0)
-            data[p] = PositionInfo(cost=prev.cost + prev.crabs, crabs=prev.crabs + crabs_at_pos)
-
-        return {p: d.cost for p, d in data.items()}
+        return self._get_cost_in_direction(self.valid_positions_reversed, -1)
 
     @cached_property
     def right_move_costs(self) -> Dict[int, int]:
-        positions = self.valid_positions
+        return self._get_cost_in_direction(self.valid_positions, 1)
+
+    def _get_cost_in_direction(self, positions: List[int], direction: int) -> Dict[int, int]:
         start = PositionInfo(cost=0, crabs=self.starting_frequencies[positions[0]])
         data: Dict[int, PositionInfo] = {
             positions[0]: start
         }
 
         for p in positions[1:]:
-            prev = data[p-1]
+            prev = data[p-direction]
             crabs_at_pos = self.starting_frequencies.get(p, 0)
             data[p] = PositionInfo(cost=prev.cost + prev.crabs, crabs=prev.crabs + crabs_at_pos)
 

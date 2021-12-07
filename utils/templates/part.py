@@ -3,7 +3,10 @@ from src.day_{day_string}.parser import Parser
 from src.day_{day_string}.solver import Solver
 
 class Day{day_string}Part{part_upper}Solver(Solver):
-    pass
+    @property
+    def solution(self) -> int:
+        return -1
+
 
 def solve(input: str) -> int:
     parser = Parser()

@@ -1,16 +1,19 @@
-from functools import cache
+from functools import cached_property
+from typing import List
 from src.day_07.parser import Parser
 from src.day_07.solver import Solver
 
 
 class Day07PartBSolver(Solver):
-    @staticmethod
-    @cache
-    def move_cost(dist: int) -> int:
-        if dist == 0:
-            return 0
-        else:
-            return dist + Day07PartBSolver.move_cost(dist - 1)
+    @cached_property
+    def move_costs(self) -> List[int]:
+        output = [0]
+        for i in range(1, self.max_pos - self.min_pos + 1):
+            output.append(i + output[i - 1])
+        return output
+
+    def move_cost(self, dist: int) -> int:
+        return self.move_costs[dist]
 
 
 def solve(input: str) -> int:

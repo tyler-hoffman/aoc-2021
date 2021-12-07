@@ -1,29 +1,28 @@
-from typing import List
-from src.day_02.shared import Direction, Down, Up, parse
+from dataclasses import dataclass
+
+from src.day_02.parser import Parser
+from src.day_02.solver import Solver
 from src.utils.point import Point
 
 
-def follow_directions(directions: List[Direction]) -> Point:
-    point = Point(x=0, y=0)
-    aim = 0
+@dataclass
+class Day02BSolver(Solver):
+    aim: int = 0
 
-    for direction in directions:
-        match direction:
-            case Up(value=value):
-                aim -= direction.value
-            case Down(value=value):
-                aim += direction.value
-            case _:
-                point += Point(x=direction.value, y=direction.value * aim)
-    return point
+    def _up(self, value: int) -> Point:
+        self.aim -= value
+
+    def _down(self, value: int) -> Point:
+        self.aim += value
+
+    def _forward(self, value: int) -> Point:
+        self.point += Point(x=value, y=value * self.aim)
 
 
 def solve(input: str) -> int:
-    directions = parse(input)
+    solver = Day02BSolver(directions=Parser.parse(input))
 
-    point = follow_directions(directions)
-
-    return point.x * point.y
+    return solver.solution
 
 
 if __name__ == "__main__":

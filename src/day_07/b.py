@@ -1,5 +1,4 @@
-from functools import cache, cached_property
-from typing import Dict
+from functools import cache
 from src.day_07.parser import Parser
 from src.day_07.solver import Solver
 

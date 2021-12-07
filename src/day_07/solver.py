@@ -31,10 +31,6 @@ class Solver(ABC):
         return list(range(self.min_pos, self.max_pos + 1))
 
     @cached_property
-    def valid_positions_reversed(self) -> List[int]:
-        return self.valid_positions[::-1]
-
-    @cached_property
     def position_costs(self) -> Dict[int, int]:
         return {
             p: self.sum_move_cost(p, self.starting_frequencies)

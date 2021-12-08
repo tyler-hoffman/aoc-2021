@@ -1,9 +1,16 @@
 from dataclasses import dataclass
 from functools import cache, cached_property
 from typing import Dict, List, Optional
-from src.day_08.models import Entry
+from src.day_08.models import Chunk, Entry
 from src.day_08.parser import Parser
 from src.day_08.solver import NumberInfo, Solver
+
+
+class Day08PartBSolver(Solver):
+    @property
+    def solution(self) -> int:
+        line_solvers = [LineSolver(entry) for entry in self.entries]
+        return sum([solver.solution for solver in line_solvers])
 
 
 @dataclass
@@ -12,12 +19,12 @@ class LineSolver(object):
 
     @property
     def solution(self) -> int:
-        numbers = [self.get_number(x) for x in self.entry.output_value]
-        return sum([x * 10 ** (3 - i) for i, x in enumerate(numbers)])
+        numbers = [self.chunks_to_ints[x] for x in self.entry.output_value]
+        return self.number_array_to_number(numbers)
 
     @cached_property
-    def ordered_strings_to_ints(self) -> Dict[str, int]:
-        d = {
+    def chunks_to_ints(self) -> Dict[Chunk, int]:
+        return {
             self.zero: 0,
             self.one: 1,
             self.two: 2,
@@ -29,17 +36,18 @@ class LineSolver(object):
             self.eight: 8,
             self.nine: 9,
         }
-        return {self.ordered_string(k): v for k, v in d.items()}
 
     @staticmethod
-    def ordered_string(s: str) -> str:
-        array = sorted(s)
-        return "".join(array)
+    def number_array_to_number(numbers: List[int]) -> int:
+        output = 0
+        for i, x in enumerate(numbers[::-1]):
+            output += x * 10 ** i
+        return output
 
-    def find_chunks_by_length(self, length: int) -> List[str]:
+    def find_chunks_by_length(self, length: int) -> List[Chunk]:
         return [x for x in self.entry.signal_patterns if len(x) == length]
 
-    def find_chunk_if_simple(self, value: int) -> Optional[str]:
+    def find_chunk_if_simple(self, value: int) -> Optional[Chunk]:
         """
         Attempt to find the chunk for a value based on its
         expected length alone. e.g. 1 is the only number with 2 segments,
@@ -52,17 +60,14 @@ class LineSolver(object):
         assert len(outputs) == 1
         return outputs[0]
 
-    def get_number(self, chunk: str) -> int:
-        ordered = self.ordered_string(chunk)
-        return self.ordered_strings_to_ints[ordered]
-
     # Now for the ugly part...
     # We have a property for each number.
     # Some are easy to figure out (i.e. 1, 4, 7, 8)
-    # Some use the idea of removing an overlay of one number from another.
-    #  - e.g. we find 9 because it is the only number that would completely cover 4.
-    #    so for each chunk that could potentially be 9, we subtract that string
-    #    from the string for 4, and if we have nothing left, we found our 9
+    # Some use the idea of erasing segments from a digit display where another
+    #    digit display would would cover those segmens. e.g. we find 9 because
+    #    it is the only number that would completely cover 4.
+    #    so for each chunk that could potentially be 9, we subtract its segments
+    #    from the segments for 4, and if we have nothing left, we found our 9.
     # Some use process of elimination.
     #  - e.g. we find 2 because it has 5 segments and it isn't 5 or 3
 
@@ -87,7 +92,7 @@ class LineSolver(object):
     @cached_property
     def three(self) -> str:
         options = self.find_chunks_by_length(5)
-        filtered = [x for x in options if len(set(self.one) - set(x)) == 0]
+        filtered = [x for x in options if len(self.one - x) == 0]
         assert len(filtered) == 1
         return filtered[0]
 
@@ -98,14 +103,14 @@ class LineSolver(object):
     @cached_property
     def five(self) -> str:
         options = self.find_chunks_by_length(5)
-        filtered = [x for x in options if len(set(self.six) - set(x)) == 1]
+        filtered = [x for x in options if len(self.six - x) == 1]
         assert len(filtered) == 1
         return filtered[0]
 
     @cached_property
     def six(self) -> str:
         options = self.find_chunks_by_length(6)
-        filtered = [x for x in options if len(set(self.one) - set(x)) == 1]
+        filtered = [x for x in options if len(self.one - x) == 1]
         assert len(filtered) == 1
         return filtered[0]
 
@@ -120,16 +125,9 @@ class LineSolver(object):
     @cached_property
     def nine(self) -> str:
         options = self.find_chunks_by_length(6)
-        filtered = [x for x in options if len(set(self.four) - set(x)) == 0]
+        filtered = [x for x in options if len(self.four - x) == 0]
         assert len(filtered) == 1
         return filtered[0]
-
-
-class Day08PartBSolver(Solver):
-    @property
-    def solution(self) -> int:
-        line_solvers = [LineSolver(entry) for entry in self.entries]
-        return sum([solver.solution for solver in line_solvers])
 
 
 def solve(input: str) -> int:

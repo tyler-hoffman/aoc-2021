@@ -59,7 +59,7 @@ class LineSolver(object):
     @cached_property
     def zero(self) -> str:
         options = self.find_chunks_by_length(6)
-        filtered = [x for x in options if x != self.six and x != self.nine]
+        filtered = [x for x in options if x not in (self.six, self.nine)]
         assert len(filtered) == 1
         return filtered[0]
 
@@ -70,7 +70,7 @@ class LineSolver(object):
     @cached_property
     def two(self) -> str:
         options = self.find_chunks_by_length(5)
-        filtered = [x for x in options if x != self.five and x != self.three]
+        filtered = [x for x in options if x not in (self.five, self.three)]
         assert len(filtered) == 1
         return filtered[0]
 

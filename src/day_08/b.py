@@ -56,6 +56,16 @@ class LineSolver(object):
         ordered = self.ordered_string(chunk)
         return self.ordered_strings_to_ints[ordered]
 
+    # Now for the ugly part...
+    # We have a property for each number.
+    # Some are easy to figure out (i.e. 1, 4, 7, 8)
+    # Some use the idea of removing an overlay of one number from another.
+    #  - e.g. we find 9 because it is the only number that would completely cover 4.
+    #    so for each chunk that could potentially be 9, we subtract that string
+    #    from the string for 4, and if we have nothing left, we found our 9
+    # Some use process of elimination.
+    #  - e.g. we find 2 because it has 5 segments and it isn't 5 or 3
+
     @cached_property
     def zero(self) -> str:
         options = self.find_chunks_by_length(6)

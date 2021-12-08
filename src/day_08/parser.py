@@ -12,8 +12,6 @@ class Parser(object):
 
         return Entry(signal_patterns=signal_paterns, output_value=output_value)
 
-
     @staticmethod
     def parse(input: str) -> List[Entry]:
         return [Parser.parse_line(line) for line in input.strip().splitlines()]
-

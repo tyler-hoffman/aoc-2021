@@ -29,3 +29,13 @@ class Grid(object):
             return self.levels[point.y][point.x]
         else:
             return None
+
+    def neighbors(self, point: Point) -> List[Point]:
+        moves: List[Point] = [
+            Point(x=0, y=1),
+            Point(x=1, y=0),
+            Point(x=0, y=-1),
+            Point(x=-1, y=0),
+        ]
+        points = [p + point for p in moves]
+        return [p for p in points if self.value_at(p) is not None]

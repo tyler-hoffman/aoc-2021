@@ -21,19 +21,9 @@ class Solver(ABC):
         for y in range(self.grid.height):
             for x, level in enumerate(self.grid.levels[y]):
                 point = Point(x=x, y=y)
-                neighbors = self.neighbors(point)
+                neighbors = self.grid.neighbors(point)
                 if all(
                     [level < self.grid.value_at(neighbor) for neighbor in neighbors]
                 ):
                     points.append(point)
         return points
-
-    def neighbors(self, point: Point) -> List[Point]:
-        moves: List[Point] = [
-            Point(x=0, y=1),
-            Point(x=1, y=0),
-            Point(x=0, y=-1),
-            Point(x=-1, y=0),
-        ]
-        points = [p + point for p in moves]
-        return [p for p in points if self.grid.value_at(p) is not None]

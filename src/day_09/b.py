@@ -1,9 +1,13 @@
+from dataclasses import dataclass, field
 from functools import cached_property
 from typing import List, Set
 from queue import Queue
 from src.day_09.parser import Parser
 from src.day_09.solver import Solver
 from src.utils.point import Point
+
+
+Basin = Set[Point]
 
 
 class Day09PartBSolver(Solver):
@@ -18,34 +22,43 @@ class Day09PartBSolver(Solver):
         return [len(basin) for basin in self.basins]
 
     @cached_property
-    def basins(self) -> List[Set[Point]]:
-        return [self.get_basin_for_point(point) for point in self.low_points]
+    def basins(self) -> List[Basin]:
+        return [
+            BasinDiscoverer(start=point, grid=self.grid).basin
+            for point in self.low_points
+        ]
 
-    def get_basin_for_point(self, start: Point) -> Set[Point]:
-        basin: Set[Point] = set([start])
-        to_check: Queue[Point] = Queue()
 
-        for n in self.neighbors(start):
-            n_level = self.grid.value_at(n)
-            if n_level > self.grid.value_at(start) and n_level < 9:
-                to_check.put(n)
+@dataclass
+class BasinDiscoverer(object):
+    grid: List[List[int]]
+    start: Point
+    discovered: Set[Point] = field(default_factory=set)
+    to_check: Queue[Point] = Queue()
 
-        while not to_check.empty():
-            point = to_check.get()
+    @property
+    def basin(self) -> Basin:
+        self._add_point(self.start)
+
+        while not self.to_check.empty():
+            point = self.to_check.get()
             level = self.grid.value_at(point)
-            neighbors = self.neighbors(point)
+            neighbors = self.grid.neighbors(point)
             lower_neighbors = [n for n in neighbors if self.grid.value_at(n) < level]
             all_lower_neighbors_are_in_basin = all(
-                [n in basin for n in lower_neighbors]
+                [n in self.discovered for n in lower_neighbors]
             )
             if all_lower_neighbors_are_in_basin:
-                basin.add((point))
-                for n in neighbors:
-                    neighbor_level = self.grid.value_at(n)
-                    if neighbor_level > level and neighbor_level < 9:
-                        to_check.put(n)
+                self._add_point(point)
 
-        return basin
+        return self.discovered
+
+    def _add_point(self, point: Point) -> None:
+        self.discovered.add(point)
+        for n in self.grid.neighbors(point):
+            level = self.grid.value_at(n)
+            if level > self.grid.value_at(point) and level < 9:
+                self.to_check.put(n)
 
 
 def solve(input: str) -> int:

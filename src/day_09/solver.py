@@ -24,7 +24,7 @@ class Solver(ABC):
                     points.append((x, y))
         return points
 
-    def neighbors(self, x: int, y: int) -> List[int]:
+    def neighbors(self, x: int, y: int) -> List[Tuple[int, int]]:
         moves = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         return [
             (x + a, y + b)

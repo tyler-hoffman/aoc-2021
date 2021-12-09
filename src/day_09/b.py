@@ -21,31 +21,31 @@ class Day09PartBSolver(Solver):
     def basins(self) -> List[Set[Point]]:
         return [self.get_basin_for_point(point) for point in self.low_points]
 
-    def get_basin_for_point(self, point: Point) -> Set[Point]:
-        so_far: Set[Point] = set([point])
+    def get_basin_for_point(self, start: Point) -> Set[Point]:
+        basin: Set[Point] = set([start])
         to_check: Queue[Point] = Queue()
-        for n in self.neighbors(point):
+
+        for n in self.neighbors(start):
             n_level = self.grid.value_at(n)
-            if n_level > self.grid.value_at(point):
+            if n_level > self.grid.value_at(start) and n_level < 9:
                 to_check.put(n)
 
         while not to_check.empty():
-            new_point = to_check.get()
-            level = self.grid.value_at(new_point)
-            neighbors = self.neighbors(new_point)
+            point = to_check.get()
+            level = self.grid.value_at(point)
+            neighbors = self.neighbors(point)
             lower_neighbors = [n for n in neighbors if self.grid.value_at(n) < level]
-            all_lower_neighbors_are_in_basin = all([n in so_far for n in lower_neighbors])
-            if level < 9 and all_lower_neighbors_are_in_basin:
-                so_far.add((new_point))
+            all_lower_neighbors_are_in_basin = all(
+                [n in basin for n in lower_neighbors]
+            )
+            if all_lower_neighbors_are_in_basin:
+                basin.add((point))
                 for n in neighbors:
                     neighbor_level = self.grid.value_at(n)
-                    if neighbor_level > level:
+                    if neighbor_level > level and neighbor_level < 9:
                         to_check.put(n)
 
-        return so_far
-
-
-
+        return basin
 
 
 def solve(input: str) -> int:

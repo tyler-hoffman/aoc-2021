@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import List, Optional
 
+from src.utils.point import Point
+
 
 @dataclass
 class Grid(object):
@@ -15,15 +17,15 @@ class Grid(object):
     def height(self) -> int:
         return len(self.levels)
 
-    def value_at(self, x: int, y: int) -> Optional[int]:
+    def value_at(self, point: Point) -> Optional[int]:
         if all(
             [
-                y >= 0,
-                y < self.height,
-                x >= 0,
-                x < self.width,
+                point.y >= 0,
+                point.y < self.height,
+                point.x >= 0,
+                point.x < self.width,
             ]
         ):
-            return self.levels[y][x]
+            return self.levels[point.y][point.x]
         else:
             return None

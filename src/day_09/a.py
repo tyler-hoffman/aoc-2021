@@ -1,4 +1,3 @@
-from typing import List
 from src.day_09.parser import Parser
 from src.day_09.solver import Solver
 
@@ -6,28 +5,7 @@ from src.day_09.solver import Solver
 class Day09PartASolver(Solver):
     @property
     def solution(self) -> int:
-        return sum(self.risk_level(p) for p in self.low_points)
-
-    @property
-    def low_points(self) -> List[int]:
-        points: List[int] = []
-        for y in range(self.grid.height):
-            for x, level in enumerate(self.grid.levels[y]):
-                if all([level < n for n in self.neighbors(x, y)]):
-                    points.append(level)
-        return points
-
-    def neighbors(self, x: int, y: int) -> List[int]:
-        output: List[int] = []
-        if y > 0:
-            output.append(self.grid.levels[y - 1][x])
-        if y < self.grid.height - 1:
-            output.append(self.grid.levels[y + 1][x])
-        if x > 0:
-            output.append(self.grid.levels[y][x - 1])
-        if x < self.grid.width - 1:
-            output.append(self.grid.levels[y][x + 1])
-        return output
+        return sum(self.risk_level(self.grid.value_at(x, y)) for x, y in self.low_points)
 
     def risk_level(self, height: int) -> int:
         return height + 1

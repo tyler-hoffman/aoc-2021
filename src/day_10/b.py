@@ -1,25 +1,25 @@
 from src.day_10.parser import Parser
-from src.day_10.solver import Incomplete, LineSolver, Solver
+from src.day_10.solver import Solver
 
 class Day10PartBSolver(Solver):
     @property
     def solution(self) -> int:
-        results = [LineSolver(line).result for line in self.lines]
-        incompletes = [result for result in results if isinstance(result, Incomplete)]
-        scores = [self.score_incomplete(incomplete.missing) for incomplete in incompletes]
+        scores = [self.score_incomplete(incomplete.missing) for incomplete in self.incompletes]
 
         return self.middle_value(scores)
 
-    def score_incomplete(self, chars: list[str]) -> int:
+    @classmethod
+    def score_incomplete(cls, chars: list[str]) -> int:
         output = 0
 
         for char in chars:
             output *= 5
-            output += self.score_for_char(char)
+            output += cls.score_for_char(char)
 
         return output
 
-    def middle_value(self, values: list[int]) -> int:
+    @staticmethod
+    def middle_value(values: list[int]) -> int:
         length = len(values)
         assert length % 2 == 1
 
@@ -27,18 +27,12 @@ class Day10PartBSolver(Solver):
 
     @staticmethod
     def score_for_char(char: str) -> int:
-        match char:
-            case ")":
-                return 1
-            case "]":
-                return 2
-            case "}":
-                return 3
-            case ">":
-                return 4
-            case _:
-                raise Exception(f"Unexpected char: {char}")
-
+        return {
+            ")": 1,
+            "]": 2,
+            "}": 3,
+            ">": 4,
+        }[char]
 
 
 def solve(input: str) -> int:

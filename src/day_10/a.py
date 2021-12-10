@@ -5,7 +5,9 @@ from src.day_10.solver import Solver
 class Day10PartASolver(Solver):
     @property
     def solution(self) -> int:
-        return sum([self.score_for_char(corruption.char) for corruption in self.corruptions])
+        return sum(
+            [self.score_for_char(corruption.char) for corruption in self.corruptions]
+        )
 
     @staticmethod
     def score_for_char(char: str) -> int:

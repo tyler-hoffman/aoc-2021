@@ -1,10 +1,13 @@
 from src.day_10.parser import Parser
 from src.day_10.solver import Solver
 
+
 class Day10PartBSolver(Solver):
     @property
     def solution(self) -> int:
-        scores = [self.score_incomplete(incomplete.missing) for incomplete in self.incompletes]
+        scores = [
+            self.score_incomplete(incomplete.missing) for incomplete in self.incompletes
+        ]
 
         return self.middle_value(scores)
 

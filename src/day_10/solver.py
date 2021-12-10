@@ -29,7 +29,7 @@ class BacketInfo(object):
 
 
 @dataclass
-class Solver():
+class Solver:
     lines: list[str]
 
     @cached_property
@@ -57,7 +57,10 @@ class LineSolver(object):
             if char in self.bracket_info.opening:
                 stack.append(char)
             elif char in self.bracket_info.closing:
-                if len(stack) == 0 or stack[-1] != self.bracket_info.closing_to_opening[char]:
+                if (
+                    len(stack) == 0
+                    or stack[-1] != self.bracket_info.closing_to_opening[char]
+                ):
                     return Corruption(index=index, char=char)
                 else:
                     stack.pop()
@@ -65,7 +68,9 @@ class LineSolver(object):
                 raise Exception(f"Unexpected char: {char}")
 
         if len(stack):
-            missing = [self.bracket_info.opening_to_closing[char] for char in stack[::-1]]
+            missing = [
+                self.bracket_info.opening_to_closing[char] for char in stack[::-1]
+            ]
             return Incomplete(missing=missing)
         else:
             return Success()
@@ -76,11 +81,14 @@ class Corruption(object):
     index: int
     char: str
 
+
 @dataclass
 class Incomplete(object):
     missing: list[str]
 
+
 class Success(object):
     pass
+
 
 Result = Corruption | Incomplete | Success

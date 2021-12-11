@@ -1,14 +1,7 @@
-from dataclasses import dataclass
-from functools import cached_property
-from itertools import product
-
-from src.day_11.models import OctopusCluster
 from src.day_11.parser import Parser
 from src.day_11.solver import Solver
-from src.utils.point import Point
 
 
-@dataclass
 class Day11PartASolver(Solver):
     @property
     def solution(self) -> int:

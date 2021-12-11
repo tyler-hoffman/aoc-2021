@@ -2,12 +2,17 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import product
+from src.day_11.models import OctopusCluster
 
 from src.utils.point import Point
 
 
 @dataclass
 class Solver(ABC):
+    octopuses: OctopusCluster
+    total_flashes: int = 0
+    steps_completed = 0
+
     @property
     @abstractmethod
     def solution(self) -> int:
@@ -24,6 +29,7 @@ class Solver(ABC):
             self.total_flashes += 1
 
         self.reset_points(flashed)
+        self.steps_completed += 1
         return len(flashed)
 
     def increment_all_and_return_flashed(self) -> list[Point]:
@@ -48,11 +54,13 @@ class Solver(ABC):
             self.octopuses[point] = 0
 
     def neighbors_of(self, point: Point) -> set[Point]:
-        potential_neighbors = {point + neighbor for neighbor in self.neighbor_differences}
+        potential_neighbors = {
+            point + neighbor for neighbor in self.neighbor_differences
+        }
         return {point for point in potential_neighbors if point in self.octopuses}
 
     @cached_property
     def neighbor_differences(self) -> set[Point]:
         diffs = [-1, 0, 1]
 
-        return {Point(x=x ,y=y) for x, y in product(diffs, diffs) if x or y}
+        return {Point(x=x, y=y) for x, y in product(diffs, diffs) if x or y}

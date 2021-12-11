@@ -10,9 +10,6 @@ from src.utils.point import Point
 
 @dataclass
 class Day11PartASolver(Solver):
-    octopuses: OctopusCluster
-    total_flashes: int = 0
-
     @property
     def solution(self) -> int:
         for _ in range(100):

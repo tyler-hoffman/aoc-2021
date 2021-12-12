@@ -1,109 +1,78 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 from dataclasses import dataclass, field
-from functools import cached_property
+from functools import cache
 from typing import Iterator
 
 from src.day_12.models import CaveSystem, Room
 
 
 @dataclass
-class Solver(ABC):
+class Solver(object):
+    path_finder: PathFinder
+
     @property
-    @abstractmethod
     def solution(self) -> int:
-        ...
+        count = 0
+        paths = []
+        for path in self.path_finder.get_paths():
+            count += 1
+            paths.append(path)
+        return count
 
 
 @dataclass
 class PathFinder(object):
     cave_system: CaveSystem
-    blocked: set[Room] = field(default_factory=lambda: set([Room.start()]))
-    current_path: list[Room] = field(default_factory=lambda: [Room.start()])
+    current_path: list[Room] = field(default_factory=lambda: [PathFinder.start])
+    room_visit_count: dict[Room, int] = field(
+        default_factory=lambda: {PathFinder.start: 1}
+    )
 
-    @cached_property
-    def end(self):
-        return Room.end()
+    @classmethod
+    @property
+    @cache
+    def start(cls) -> Room:
+        return Room("start")
+
+    @classmethod
+    @property
+    @cache
+    def end(cls) -> Room:
+        return Room("end")
 
     @property
     def is_complete(self) -> bool:
-        current_room = self.current_path[-1]
-        return current_room == self.end
+        return self.current_room == self.end
 
     @property
     def current_room(self) -> bool:
         return self.current_path[-1]
 
+    def get_visit_count(self, room: Room) -> int:
+        return self.room_visit_count.get(room, 0)
+
+    def change_visit_count(self, room: Room, amt: int) -> None:
+        self.room_visit_count[room] = self.get_visit_count(room) + amt
+
+    def can_explore_room(self, room: Room) -> bool:
+        return room.is_big or not self.get_visit_count(room)
+
     def get_paths(self) -> Iterator[Room]:
         yield from self._explore()
+
+    def _explore_room(self, room: Room) -> Iterator[Room]:
+        self.change_visit_count(room, 1)
+        self.current_path.append(room)
+
+        yield from self._explore()
+
+        self.current_path.pop()
+        self.change_visit_count(room, -1)
 
     def _explore(self) -> Iterator[Room]:
         if self.is_complete:
             yield self.current_path.copy()
         else:
-            for room in self.cave_system.connections_for_room(self.current_room):
-                if not room in self.blocked:
-                    if not room.is_big:
-                        self.blocked.add(room)
-                    self.current_path.append(room)
-
-                    yield from self._explore()
-
-                    self.current_path.pop()
-                    if room in self.blocked:
-                        self.blocked.remove(room)
-
-
-@dataclass
-class PathFinderB(object):
-    cave_system: CaveSystem
-    blocked: set[Room] = field(default_factory=lambda: set([Room.start()]))
-    current_path: list[Room] = field(default_factory=lambda: [Room.start()])
-    double_checked_a_small_room: bool = False
-
-    @cached_property
-    def end(self):
-        return Room.end()
-
-    @cached_property
-    def start(self):
-        return Room.start()
-
-    @property
-    def is_complete(self) -> bool:
-        current_room = self.current_path[-1]
-        return current_room == self.end
-
-    @property
-    def current_room(self) -> Room:
-        return self.current_path[-1]
-
-    def get_paths(self) -> Iterator[Room]:
-        yield from self._explore()
-
-    def _explore(self) -> Iterator[Room]:
-        if self.is_complete:
-            yield self.current_path.copy()
-        else:
-            for room in self.cave_system.connections_for_room(self.current_room):
-                if not room in self.blocked:
-                    if not room.is_big:
-                        self.blocked.add(room)
-                    self.current_path.append(room)
-
-                    yield from self._explore()
-
-                    self.current_path.pop()
-                    if room in self.blocked:
-                        self.blocked.remove(room)
-                elif not self.double_checked_a_small_room and room != self.start:
-                    if self.current_room.name == "start":
-                        x = 1
-                    self.double_checked_a_small_room = True
-
-                    self.current_path.append(room)
-
-                    yield from self._explore()
-
-                    self.current_path.pop()
-
-                    self.double_checked_a_small_room = False
+            for room in self.cave_system.room_connections(self.current_room):
+                if self.can_explore_room(room):
+                    yield from self._explore_room(room)

@@ -51,3 +51,59 @@ class PathFinder(object):
                     self.current_path.pop()
                     if room in self.blocked:
                         self.blocked.remove(room)
+
+
+@dataclass
+class PathFinderB(object):
+    cave_system: CaveSystem
+    blocked: set[Room] = field(default_factory=lambda: set([Room.start()]))
+    current_path: list[Room] = field(default_factory=lambda: [Room.start()])
+    double_checked_a_small_room: bool = False
+
+    @cached_property
+    def end(self):
+        return Room.end()
+
+    @cached_property
+    def start(self):
+        return Room.start()
+
+    @property
+    def is_complete(self) -> bool:
+        current_room = self.current_path[-1]
+        return current_room == self.end
+
+    @property
+    def current_room(self) -> Room:
+        return self.current_path[-1]
+
+    def get_paths(self) -> Iterator[Room]:
+        yield from self._explore()
+
+    def _explore(self) -> Iterator[Room]:
+        if self.is_complete:
+            yield self.current_path.copy()
+        else:
+            for room in self.cave_system.connections_for_room(self.current_room):
+                if not room in self.blocked:
+                    if not room.is_big:
+                        self.blocked.add(room)
+                    self.current_path.append(room)
+
+                    yield from self._explore()
+
+                    self.current_path.pop()
+                    if room in self.blocked:
+                        self.blocked.remove(room)
+                elif not self.double_checked_a_small_room and room != self.start:
+                    if self.current_room.name == "start":
+                        x = 1
+                    self.double_checked_a_small_room = True
+
+                    self.current_path.append(room)
+
+                    yield from self._explore()
+
+                    self.current_path.pop()
+
+                    self.double_checked_a_small_room = False

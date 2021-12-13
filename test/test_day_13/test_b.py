@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 
-from src.utils.question_asker import QuestionAsker
+from src.services.human_service import HumanService
 
 from .sample_data import SAMPLE_DATA
 from src.day_13.b import solve
@@ -57,21 +57,21 @@ class TestDay13B(TestCase):
     arbitrary_human_response = "dinosaur"
 
     def test_solve(self):
-        question_asker = mock.MagicMock(spec=QuestionAsker)
-        question_asker.ask.return_value = self.arbitrary_human_response
+        human_service = mock.MagicMock(spec=HumanService)
+        human_service.ask.return_value = self.arbitrary_human_response
 
-        solution = solve(SAMPLE_DATA, question_asker)
+        solution = solve(SAMPLE_DATA, human_service)
 
-        question_asker.say.assert_called_with(expected_for_sample)
+        human_service.say.assert_called_with(expected_for_sample)
         self.assertEqual(solution, self.arbitrary_human_response)
 
     def test_solution(self):
-        question_asker = mock.MagicMock(spec=QuestionAsker)
-        question_asker.ask.return_value = self.arbitrary_human_response
+        human_service = mock.MagicMock(spec=HumanService)
+        human_service.ask.return_value = self.arbitrary_human_response
         with open("src/day_13/input.txt", "r") as f:
             input_string = f.read()
 
-        solution = solve(input_string, question_asker)
+        solution = solve(input_string, human_service)
 
-        question_asker.say.assert_called_with(expected_for_input)
+        human_service.say.assert_called_with(expected_for_input)
         self.assertEqual(solution, self.arbitrary_human_response)

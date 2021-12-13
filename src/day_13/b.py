@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from src.day_13.models import Data
 from src.day_13.parser import Parser
 from src.day_13.solver import Folder
-from src.utils.question_asker import QuestionAsker
+from src.services.human_service import HumanService
 
 
 @dataclass
@@ -17,13 +17,13 @@ class Day13PartBSolver(object):
         return str(folder)
 
 
-def solve(input_string: str, question_asker: QuestionAsker) -> int:
+def solve(input_string: str, human_service: HumanService) -> int:
     data = Parser.parse(input_string)
     solver = Day13PartBSolver(data=data)
 
     human_readable = solver.solution
-    question_asker.say(human_readable)
-    aoc_readable = question_asker.ask("What's that look like to you?")
+    human_service.say(human_readable)
+    aoc_readable = human_service.ask("What's that look like to you?")
 
     return aoc_readable
 
@@ -31,4 +31,4 @@ def solve(input_string: str, question_asker: QuestionAsker) -> int:
 if __name__ == "__main__":
     with open("src/day_13/input.txt", "r") as f:
         input_string = f.read()
-    print(solve(input_string, QuestionAsker()))
+    print(solve(input_string, HumanService()))

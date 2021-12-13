@@ -1,4 +1,4 @@
-class QuestionAsker(object):
+class HumanService(object):
     def say(self, string: str) -> None:
         print(string)
 

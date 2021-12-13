@@ -13,28 +13,38 @@ from src.day_13.b import solve
 # Oh, and we have to omit the first character here because
 # it's a newline for formatting that shouldn't really be present.
 
-EXPECTED_FOR_SAMPLE = """
+
+def cleanup_string(string: str) -> str:
+    """Helper to remove leading newline
+    and potentially replace periods with blank spaces
+    if present. Only exists so I can make things look
+    reasonable below...
+    """
+
+    return string[1:].replace(".", " ")
+
+
+expected_for_sample = cleanup_string(
+    """
 #####
 #...#
 #...#
 #...#
 #####
-"""[
-    1:
-].replace(
-    ".", " "
+"""
 )
 
-EXPECTED_FOR_INPUT = """
+
+expected_for_input = cleanup_string(
+    """
 ###  #### #  # ###  #  # ###  #  # ### 
 #  # #    #  # #  # #  # #  # # #  #  #
 #  # ###  #  # #  # #  # #  # ##   #  #
 ###  #    #  # ###  #  # ###  # #  ### 
 # #  #    #  # #    #  # #    # #  # # 
 #  # ####  ##  #     ##  #    #  # #  #
-"""[
-    1:
-]
+"""
+)
 
 
 class TestDay13B(TestCase):
@@ -52,7 +62,7 @@ class TestDay13B(TestCase):
 
         solution = solve(SAMPLE_DATA, question_asker)
 
-        question_asker.say.assert_called_with(EXPECTED_FOR_SAMPLE)
+        question_asker.say.assert_called_with(expected_for_sample)
         self.assertEqual(solution, self.arbitrary_human_response)
 
     def test_solution(self):
@@ -63,5 +73,5 @@ class TestDay13B(TestCase):
 
         solution = solve(input_string, question_asker)
 
-        question_asker.say.assert_called_with(EXPECTED_FOR_INPUT)
+        question_asker.say.assert_called_with(expected_for_input)
         self.assertEqual(solution, self.arbitrary_human_response)

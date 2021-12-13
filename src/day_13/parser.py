@@ -14,9 +14,9 @@ class Parser(object):
     def parse_fold(cls, line: str) -> Point:
         _, last_part = line.split("=")
         if "x=" in line:
-            return FoldX(x=int(last_part))
+            return FoldX(value=int(last_part))
         elif "y=" in line:
-            return FoldY(y=int(last_part))
+            return FoldY(value=int(last_part))
         else:
             raise Exception("Invalid fold line: {line}")
 

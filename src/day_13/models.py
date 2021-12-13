@@ -4,11 +4,11 @@ from src.utils.point import Point
 
 @dataclass
 class FoldX(object):
-    x: int
+    value: int
 
 @dataclass
 class FoldY(object):
-    y: int
+    value: int
 
 Fold = FoldX | FoldY
 

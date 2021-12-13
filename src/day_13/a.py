@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from src.day_13.models import Data
 from src.day_13.parser import Parser
-from src.day_13.solver import Folder, Solver
+from src.day_13.solver import Folder
+
 
 @dataclass
-class Day13PartASolver(Solver):
+class Day13PartASolver(object):
     data: Data
 
     @property

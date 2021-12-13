@@ -35,4 +35,3 @@ class Parser(object):
                 folds.append(cls.parse_fold(line))
 
         return Data(points=points, folds=folds)
-

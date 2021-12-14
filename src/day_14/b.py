@@ -4,7 +4,7 @@ from src.day_14.solver import Solver
 
 def solve(input: str) -> int:
     data = Parser.parse(input)
-    solver = Solver(template=data.template, rules=data.rules, iterations=10)
+    solver = Solver(template=data.template, rules=data.rules, iterations=40)
 
     return solver.solution
 

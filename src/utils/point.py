@@ -14,6 +14,9 @@ class Point(object):
     def magnitude(self) -> int:
         return abs(self.x) + abs(self.y)
 
+    def manhattan_dist(self, other: Point) -> int:
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
     def __lt__(self, other) -> bool:
         if isinstance(other, Point):
             return self.magnitude < other.magnitude

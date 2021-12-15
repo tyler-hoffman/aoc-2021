@@ -30,16 +30,17 @@ class Solver(ABC):
         self.explored[point] = total_risk
         for direction in self.directions:
             new_point = point + direction
-            if new_point in self.grid and new_point not in self.explored:
-                new_total_risk = self.grid[new_point] + total_risk
-                if new_total_risk < self.in_queue.get(new_point, infinity):
-                    optimistic_cost = (
-                        new_point.manhattan_dist(self.end) + new_total_risk
-                    )
-                    self.to_expand_queue.put(
-                        (optimistic_cost, new_total_risk, new_point)
-                    )
-                    self.in_queue[new_point] = new_total_risk
+            new_total_risk = total_risk + self.grid.get(new_point, infinity)
+            if all(
+                [
+                    new_point in self.grid,
+                    new_point not in self.explored,
+                    new_total_risk < self.in_queue.get(new_point, infinity),
+                ]
+            ):
+                optimistic_cost = new_point.manhattan_dist(self.end) + new_total_risk
+                self.to_expand_queue.put((optimistic_cost, new_total_risk, new_point))
+                self.in_queue[new_point] = new_total_risk
 
     @cached_property
     def explored(self) -> dict[Point, int]:

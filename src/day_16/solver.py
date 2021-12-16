@@ -1,92 +1,16 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from functools import cached_property
-from typing import Iterator
+from dataclasses import dataclass
 
-
-@dataclass
-class Solver(ABC):
-    @property
-    @abstractmethod
-    def solution(self) -> int:
-        ...
-
-
-@dataclass
-class Packet(ABC):
-    version: int
-    sub_packets: list[Packet]
-
-    @property
-    @abstractmethod
-    def value(self) -> int:
-        ...
-
-    def all_packets(self) -> Iterator[Packet]:
-        yield self
-        for p in self.sub_packets:
-            yield from p.all_packets()
-
-
-@dataclass
-class LiteralPacket(Packet):
-    bits: str
-
-    @property
-    def value(self) -> int:
-        return int(self.bits, 2)
-
-
-class SumPacket(Packet):
-    @property
-    def value(self) -> int:
-        return sum([p.value for p in self.sub_packets])
-
-
-class ProductPacket(Packet):
-    @property
-    def value(self) -> int:
-        product = 1
-        for p in self.sub_packets:
-            product *= p.value
-        return product
-
-
-class MinPacket(Packet):
-    @property
-    def value(self) -> int:
-        return min([p.value for p in self.sub_packets])
-
-
-class MaxPacket(Packet):
-    @property
-    def value(self) -> int:
-        return max([p.value for p in self.sub_packets])
-
-
-class LessThanPacket(Packet):
-    @property
-    def value(self) -> int:
-        assert len(self.sub_packets) == 2
-        a, b = self.sub_packets
-        return 1 if a.value < b.value else 0
-
-
-class GreaterThanPacket(Packet):
-    @property
-    def value(self) -> int:
-        assert len(self.sub_packets) == 2
-        a, b = self.sub_packets
-        return 1 if a.value > b.value else 0
-
-
-class EqualToPacket(Packet):
-    @property
-    def value(self) -> int:
-        assert len(self.sub_packets) == 2
-        a, b = self.sub_packets
-        return 1 if a.value == b.value else 0
+from src.day_16.models import (
+    EqualToPacket,
+    GreaterThanPacket,
+    LessThanPacket,
+    LiteralPacket,
+    MaxPacket,
+    MinPacket,
+    Packet,
+    ProductPacket,
+    SumPacket,
+)
 
 
 @dataclass
@@ -158,43 +82,3 @@ class PacketReader(object):
                 return EqualToPacket(version=version, sub_packets=sub_packets)
             case _:
                 raise Exception(f"type_id {type_id} isn't for operators, ya goof!")
-
-    # @cached_property
-    # def packets(self) -> list[PacketReader]:
-    #     if self.is_literal:
-    #         return [self]
-
-    # @cached_property
-    # def version(self) -> int:
-    #     return int(self.bits[self.global_index(0):self.global_index(3)], 2)
-
-    # @cached_property
-    # def type_id(self) -> int:
-    #     return int(self.bits[self.global_index(3):self.global_index(6)], 2)
-
-    # @cached_property
-    # def length_type_id(self) -> int:
-    #     assert not self.is_literal
-    #     return int(self.bits[self.global_index(6)])
-
-    # def literal_bits(self) -> str:
-    #     chunks = list[str]()
-    #     index = self.global_index(6)
-    #     while self.bits[index] == "1":
-    #         chunks.append(self.bits[index + 1: index+5])
-    #         index += 5
-    #     chunks.append(self.bits[index + 1: index+5])
-    #     return "".join(chunks)
-
-    # def length_type_0_bits(self) -> str:
-    #     assert self.length_type_id == 0
-    #     total_subpacket_length = int(self.bits[self.global_index(7):self.global_index(7+15)], 2)
-
-    def length_type_1_bits(self) -> str:
-        assert self.length_type_id == 1
-        number_of_subpackets = int(
-            self.bits[self.global_index(7) : self.global_index(7 + 11)], 2
-        )
-
-    def global_index(self, relative_index: int):
-        return self.start + relative_index

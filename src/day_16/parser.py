@@ -1,9 +1,10 @@
 from typing import List
 
-from src.day_16.helpers import hex_to_binary
-
 
 class Parser(object):
     @staticmethod
     def parse(input: str) -> str:
-        return hex_to_binary(input.strip())
+        numbers = [int(x, 16) for x in input.strip()]
+        array_of_bits = [f"{x:>04b}" for x in numbers]
+        all_bits = "".join(array_of_bits)
+        return all_bits

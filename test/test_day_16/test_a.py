@@ -1,7 +1,7 @@
 from parameterized import parameterized
 import unittest
+from src.day_16.parser import Parser
 
-from src.day_16.helpers import hex_to_binary
 from src.day_16.solver import PacketReader
 
 from src.day_16.a import solve
@@ -9,23 +9,20 @@ from src.day_16.a import solve
 
 class TestDay16A(unittest.TestCase):
     def test_evaluates_literal(self):
-        hex_value = "D2FE28"
-        bits = hex_to_binary(hex_value)
+        bits = Parser.parse("D2FE28")
         packet_reader = PacketReader(bits)
 
         self.assertEqual(packet_reader.read().value, 2021)
 
     def test_length_type_0(self):
-        hex_value = "38006F45291200"
-        bits = hex_to_binary(hex_value)
+        bits = Parser.parse("38006F45291200")
         packet_reader = PacketReader(bits)
         packet = packet_reader.read()
 
         self.assertEqual(len(packet.sub_packets), 2)
 
     def test_length_type_1(self):
-        hex_value = "EE00D40C823060"
-        bits = hex_to_binary(hex_value)
+        bits = Parser.parse("EE00D40C823060")
         packet_reader = PacketReader(bits)
         packet = packet_reader.read()
 

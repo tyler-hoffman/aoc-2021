@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from src.day_16.parser import Parser
-from src.day_16.solver import PacketReader, Solver
+from src.day_16.solver import PacketReader
 
 
 @dataclass
-class Day16PartASolver(Solver):
+class Day16PartASolver(object):
     bits: str
 
     @property

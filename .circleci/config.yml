@@ -22,6 +22,16 @@ jobs:
       - run:
           name: Check formatting
           command: poetry run python -m black --check . --target-version py310
+  build-and-flake8:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: poetry
+      - run:
+          name: Check flake8
+          command: poetry run python -m flake8
 workflows:
   test:
     jobs:
@@ -29,3 +39,6 @@ workflows:
   check-formatting:
     jobs:
       - build-and-check-formatting
+  check-flake8:
+    jobs:
+      - build-and-flake8

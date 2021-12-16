@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from src.day_16.parser import Parser
 from src.day_16.solver import PacketReader, Solver
 
+
 @dataclass
 class Day16PartASolver(Solver):
     bits: str

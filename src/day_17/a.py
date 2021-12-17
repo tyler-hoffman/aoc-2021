@@ -3,16 +3,16 @@ from src.day_17.models import TargetArea, Trajectory
 from src.day_17.parser import Parser
 from src.day_17.solver import Solver
 
-class Day17PartASolver(Solver):
 
+class Day17PartASolver(Solver):
     @property
     def solution(self) -> int:
-        trajectory = Trajectory(y_vel=self.max_y_vel)
+        trajectory = Trajectory(y_vel=self.max_y_vel_to_check)
 
         highest_y = 0
         for y in trajectory.y_points():
             if y < highest_y:
-                return highest_y 
+                return highest_y
             else:
                 highest_y = y
 

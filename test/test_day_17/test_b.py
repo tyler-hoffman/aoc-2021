@@ -7,3 +7,8 @@ from src.day_17.b import solve
 class TestDay17B(unittest.TestCase):
     def test_solve(self):
         self.assertEqual(solve(SAMPLE_DATA), 112)
+
+    def test_solution(self):
+        with open("src/day_17/input.txt", "r") as f:
+            input = f.read()
+            self.assertEqual(solve(input), 2953)

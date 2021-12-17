@@ -10,6 +10,7 @@ class TargetArea(object):
     y_min: int
     y_max: int
 
+
 @dataclass
 class Trajectory(object):
     x_vel: int = 0

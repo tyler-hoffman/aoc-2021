@@ -1,4 +1,5 @@
 from functools import cached_property
+from itertools import product
 from src.day_17.models import Trajectory
 from src.day_17.parser import Parser
 from src.day_17.solver import Solver
@@ -13,10 +14,8 @@ class Day17PartBSolver(Solver):
             ys = self.y_vels_by_time.get(t, {})
             xs = self.x_vels_by_time.get(t, {})
 
-            for y in ys:
-                for x in xs:
-                    p = Point(x=x, y=y)
-                    points.add(p)
+            for x, y in product(xs, ys):
+                points.add(Point(x=x, y=y))
 
         return len(points)
 
@@ -32,6 +31,7 @@ class Day17PartBSolver(Solver):
     def vel_t_map_to_t_vel_map(
         vels_to_times: dict[int, set[int]]
     ) -> dict[int, set[int]]:
+        """Convert (mapping of times => sets of valid velocities) to (mappings of velocities => sets of times)"""
         output = dict[int, set[int]]()
         for vel, times in vels_to_times.items():
             for t in times:
@@ -44,8 +44,9 @@ class Day17PartBSolver(Solver):
     def times_x_vels_lead_to_target(self) -> dict[int, set[int]]:
         output = dict[int, set[int]]()
         for x_vel in range(self.min_x_vel_to_check, self.max_x_vel_to_check + 1):
-            output[x_vel] = self.times_x_vel_leads_to_target(x_vel)
-        return {k: v for k, v in output.items() if v}
+            if times := self.times_x_vel_leads_to_target(x_vel):
+                output[x_vel] = times
+        return output
 
     def times_x_vel_leads_to_target(self, x_vel: int) -> set[int]:
         trajectory = Trajectory(x_vel=x_vel)
@@ -65,8 +66,9 @@ class Day17PartBSolver(Solver):
     def times_y_vels_lead_to_target(self) -> dict[int, set[int]]:
         output = dict[int, set[int]]()
         for y_vel in range(self.min_y_vel_to_check, self.max_y_vel_to_check + 1):
-            output[y_vel] = self.times_y_vel_leads_to_target(y_vel)
-        return {k: v for k, v in output.items() if v}
+            if times := self.times_y_vel_leads_to_target(y_vel):
+                output[y_vel] = times
+        return output
 
     def times_y_vel_leads_to_target(self, y_vel: int) -> set[int]:
         trajectory = Trajectory(y_vel=y_vel)
@@ -87,10 +89,7 @@ class Day17PartBSolver(Solver):
 
     @cached_property
     def valid_times(self) -> set[int]:
-        times = set[int]()
-        times.update(self.y_vels_by_time.keys())
-        times.update(self.x_vels_by_time.keys())
-        return times
+        return set([*self.y_vels_by_time.keys(), *self.x_vels_by_time.keys()])
 
 
 def solve(input: str) -> int:

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cached_property
 from src.day_18.parser import Parser
 from src.day_18.solver import SnailfishNumber, Solver
 
@@ -9,7 +10,14 @@ class Day18PartASolver(Solver):
 
     @property
     def solution(self) -> int:
-        return -1
+        return self.sum.magnitude
+
+    @cached_property
+    def sum(self) -> SnailfishNumber:
+        snailfish_number = self.snailfish_numbers[0]
+        for x in self.snailfish_numbers[1:]:
+            snailfish_number += x
+        return snailfish_number
 
 
 def solve(input: str) -> int:

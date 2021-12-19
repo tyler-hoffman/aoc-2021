@@ -30,4 +30,4 @@ def solve(input: str) -> int:
 if __name__ == "__main__":
     with open("src/day_18/input.txt", "r") as f:
         input = f.read()
-    print(solve(input))
+        print(solve(input))

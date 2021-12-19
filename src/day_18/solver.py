@@ -65,7 +65,22 @@ class SnailfishNumber(ABC):
             if curr.should_explode:
                 curr.parent.explode(prev=prev, upcoming=after_that)
                 return True
-            elif curr.should_split:
+            # elif curr.should_split:
+            #     curr.parent.split(child=curr)
+            #     return True
+
+        nodes = self.nodes()
+        prev: Optional[SnailfishLeafNode] = None
+        curr: Optional[SnailfishLeafNode] = None
+        upcoming: Optional[SnailfishLeafNode] = next(nodes)
+        after_that: Optional[SnailfishLeafNode] = next(nodes)
+
+        for node in [*nodes, None, None]:
+            prev, curr, upcoming, after_that = curr, upcoming, after_that, node
+            # if curr.should_explode:
+            #     curr.parent.explode(prev=prev, upcoming=after_that)
+            #     return True
+            if curr.should_split:
                 curr.parent.split(child=curr)
                 return True
         return False

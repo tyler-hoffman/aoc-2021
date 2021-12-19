@@ -1,6 +1,5 @@
 from functools import cached_property
-from itertools import combinations, permutations, product
-from src.day_19.models import Point3D
+from itertools import combinations
 from src.day_19.parser import Parser
 from src.day_19.solver import Solver
 
@@ -8,14 +7,11 @@ from src.day_19.solver import Solver
 class Day19PartBSolver(Solver):
     @cached_property
     def solution(self) -> int:
-        self.group_them()
-
         max_dist = 0
-        for a, b in combinations(self.grouped, 2):
+        for a, b in combinations(self.oriented_scanners, 2):
             dist = a.position.manhattan_dist(b.position)
             if dist > max_dist:
                 max_dist = dist
-
         return max_dist
 
 

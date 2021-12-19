@@ -5,13 +5,10 @@ from src.day_19.solver import Solver
 
 
 class Day19PartASolver(Solver):
-
     @cached_property
     def solution(self) -> int:
-        self.group_them()
-
         points = set[Point3D]()
-        for reading in self.grouped:
+        for reading in self.oriented_scanners:
             for point in reading.points:
                 points.add(point)
         return len(points)

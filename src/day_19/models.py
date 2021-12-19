@@ -17,35 +17,35 @@ class Point3D(object):
         """
 
         forward = self
-        left = forward.rotate_on_z()
-        back = left.rotate_on_z()
-        right = back.rotate_on_z()
-        up = self.rotate_on_y()
-        down = up.rotate_on_y().rotate_on_y()
+        left = forward._rotate_on_z()
+        back = left._rotate_on_z()
+        right = back._rotate_on_z()
+        up = self._rotate_on_y()
+        down = up._rotate_on_y()._rotate_on_y()
         directions: list[Point3D] = [forward, left, back, right, up, down]
 
         output = list[Point3D]()
         for direction in directions:
             output.append(direction)
-            output.append(output[-1].rotate_on_x())
-            output.append(output[-1].rotate_on_x())
-            output.append(output[-1].rotate_on_x())
+            output.append(output[-1]._rotate_on_x())
+            output.append(output[-1]._rotate_on_x())
+            output.append(output[-1]._rotate_on_x())
 
         return output
 
-    def rotate_on_x(self) -> Point3D:
+    def _rotate_on_x(self) -> Point3D:
         return Point3D(self.x, self.z, -self.y)
 
-    def rotate_on_y(self) -> Point3D:
+    def _rotate_on_y(self) -> Point3D:
         return Point3D(self.z, self.y, -self.x)
 
-    def rotate_on_z(self) -> Point3D:
+    def _rotate_on_z(self) -> Point3D:
         return Point3D(self.y, -self.x, self.z)
 
     def manhattan_dist(self, other: Point3D) -> int:
-        x = other.x - self.x 
-        y = other.y - self.y 
-        z = other.z - self.z 
+        x = other.x - self.x
+        y = other.y - self.y
+        z = other.z - self.z
         return sum([abs(value) for value in [x, y, z]])
 
     def __add__(self, other: Any) -> Point3D:
@@ -67,33 +67,12 @@ class ScannerReading(object):
 
     def shift(self, delta: Point3D) -> ScannerReading:
         points = [p + delta for p in self.points]
-        return ScannerReading(id=self.id, points=points, position=self.position+delta) 
+        return ScannerReading(id=self.id, points=points, position=self.position + delta)
 
     @cached_property
     def orientations(self) -> list[ScannerReading]:
         new_points_by_orientation = zip(*[p.orientations() for p in self.points])
-        return [ScannerReading(id=self.id, points=points) for points in new_points_by_orientation]
-
-    @cached_property
-    def max_x(self) -> int:
-        return max([p.x for p in self.points])
-
-    @cached_property
-    def min_x(self) -> int:
-        return min([p.x for p in self.points])
-
-    @cached_property
-    def max_y(self) -> int:
-        return max([p.y for p in self.points])
-
-    @cached_property
-    def min_y(self) -> int:
-        return min([p.y for p in self.points])
-
-    @cached_property
-    def max_z(self) -> int:
-        return max([p.z for p in self.points])
-
-    @cached_property
-    def min_z(self) -> int:
-        return min([p.z for p in self.points])
+        return [
+            ScannerReading(id=self.id, points=points)
+            for points in new_points_by_orientation
+        ]

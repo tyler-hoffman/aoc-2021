@@ -1,15 +1,28 @@
+from dataclasses import dataclass
+from functools import cached_property
+from src.day_19.models import Point3D
 from src.day_19.parser import Parser
 from src.day_19.solver import Solver
+from src.utils.collections import frequency_map
 
+
+@dataclass
 class Day19PartASolver(Solver):
-    @property
+
+    @cached_property
     def solution(self) -> int:
-        return -1
+        self.group_them()
+
+        points = set[Point3D]()
+        for reading in self.grouped:
+            for point in reading.points:
+                points.add(point)
+        return len(points)
 
 
 def solve(input: str) -> int:
-    parser = Parser()
-    solver = Day19PartASolver(parser.parse(input))
+    scanner_readings = Parser.parse(input)
+    solver = Day19PartASolver(scanner_readings=scanner_readings)
 
     return solver.solution
 

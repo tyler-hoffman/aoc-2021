@@ -42,6 +42,12 @@ class Point3D(object):
     def rotate_on_z(self) -> Point3D:
         return Point3D(self.y, -self.x, self.z)
 
+    def manhattan_dist(self, other: Point3D) -> int:
+        x = other.x - self.x 
+        y = other.y - self.y 
+        z = other.z - self.z 
+        return sum([abs(value) for value in [x, y, z]])
+
     def __add__(self, other: Any) -> Point3D:
         if not isinstance(other, Point3D):
             raise Exception("No.")
@@ -61,7 +67,7 @@ class ScannerReading(object):
 
     def shift(self, delta: Point3D) -> ScannerReading:
         points = [p + delta for p in self.points]
-        return ScannerReading(id=self.id, points=points) 
+        return ScannerReading(id=self.id, points=points, position=self.position+delta) 
 
     @cached_property
     def orientations(self) -> list[ScannerReading]:

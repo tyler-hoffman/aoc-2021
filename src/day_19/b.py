@@ -1,25 +1,27 @@
 from functools import cached_property
+from itertools import combinations, permutations, product
 from src.day_19.models import Point3D
 from src.day_19.parser import Parser
 from src.day_19.solver import Solver
 
 
-class Day19PartASolver(Solver):
-
+class Day19PartBSolver(Solver):
     @cached_property
     def solution(self) -> int:
         self.group_them()
 
-        points = set[Point3D]()
-        for reading in self.grouped:
-            for point in reading.points:
-                points.add(point)
-        return len(points)
+        max_dist = 0
+        for a, b in combinations(self.grouped, 2):
+            dist = a.position.manhattan_dist(b.position)
+            if dist > max_dist:
+                max_dist = dist
+
+        return max_dist
 
 
 def solve(input: str) -> int:
     scanner_readings = Parser.parse(input)
-    solver = Day19PartASolver(scanner_readings=scanner_readings)
+    solver = Day19PartBSolver(scanner_readings=scanner_readings)
 
     return solver.solution
 

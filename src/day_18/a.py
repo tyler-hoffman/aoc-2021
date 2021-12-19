@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from functools import cached_property
 from src.day_18.parser import Parser
-from src.day_18.solver import SnailfishNumber, Solver
+from src.day_18.solver import SnailfishNumber
 
 
 @dataclass
-class Day18PartASolver(Solver):
+class Day18PartASolver(object):
     snailfish_numbers: list[SnailfishNumber]
 
     @cached_property
@@ -21,7 +21,7 @@ class Day18PartASolver(Solver):
 
 
 def solve(input: str) -> int:
-    snailfish_numbers = Parser.parse(input)
+    snailfish_numbers = Parser.parse_all(input)
     solver = Day18PartASolver(snailfish_numbers=snailfish_numbers)
 
     return solver.solution

@@ -6,22 +6,11 @@ from typing import Any, Iterator, Optional
 
 
 @dataclass
-class Solver(ABC):
-    @property
-    @abstractmethod
-    def solution(self) -> int:
-        ...
-
-@dataclass
 class SnailfishNumber(ABC):
     parent: Optional[SnailfishPair]
 
     @abstractmethod
     def nodes(self) -> Iterator[SnailfishLeafNode]:
-        ...
-
-    @abstractmethod
-    def reduce(self):
         ...
 
     @property
@@ -30,23 +19,8 @@ class SnailfishNumber(ABC):
         ...
 
     @property
-    @abstractmethod
-    def leftmost(self) -> SnailfishLeafNode:
-        ...
-
-    @property
-    @abstractmethod
-    def rightmost(self) -> SnailfishLeafNode:
-        ...
-
-    @property
     def depth(self) -> int:
-        depth = 0
-        node = self.parent
-        while node:
-            depth += 1
-            node = node.parent
-        return depth
+        return 1 + self.parent.depth if self.parent else 0
 
     def reduce(self) -> None:
         reducing = True
@@ -54,6 +28,9 @@ class SnailfishNumber(ABC):
             reducing = self.reduce_next()
 
     def reduce_next(self) -> bool:
+        return self.reduce_next_explode() or self.reduce_next_split()
+
+    def reduce_next_explode(self) -> bool:
         nodes = self.nodes()
         prev: Optional[SnailfishLeafNode] = None
         curr: Optional[SnailfishLeafNode] = None
@@ -62,34 +39,22 @@ class SnailfishNumber(ABC):
 
         for node in [*nodes, None, None]:
             prev, curr, upcoming, after_that = curr, upcoming, after_that, node
-            if curr.should_explode:
+            if curr.depth > 4:
                 curr.parent.explode(prev=prev, upcoming=after_that)
-                return True
-            # elif curr.should_split:
-            #     curr.parent.split(child=curr)
-            #     return True
-
-        nodes = self.nodes()
-        prev: Optional[SnailfishLeafNode] = None
-        curr: Optional[SnailfishLeafNode] = None
-        upcoming: Optional[SnailfishLeafNode] = next(nodes)
-        after_that: Optional[SnailfishLeafNode] = next(nodes)
-
-        for node in [*nodes, None, None]:
-            prev, curr, upcoming, after_that = curr, upcoming, after_that, node
-            # if curr.should_explode:
-            #     curr.parent.explode(prev=prev, upcoming=after_that)
-            #     return True
-            if curr.should_split:
-                curr.parent.split(child=curr)
                 return True
         return False
 
+    def reduce_next_split(self) -> bool:
+        for node in self.nodes():
+            if node.value >= 10:
+                node.parent.split(child=node)
+                return True
+        return False
 
     def __add__(self, other: Any) -> SnailfishNumber:
         if not isinstance(other, SnailfishNumber):
             raise Exception(f"Can't add {type(other)} to SnailfishNumber")
-        parent = SnailfishPair(parent=None, left=self, right=other) 
+        parent = SnailfishPair(parent=None, left=self, right=other)
         self.parent = parent
         other.parent = parent
         parent.reduce()
@@ -104,7 +69,9 @@ class SnailfishPair(SnailfishNumber):
     left: SnailfishNumber
     right: SnailfishNumber
 
-    def explode(self, prev: Optional[SnailfishLeafNode], upcoming: Optional[SnailfishLeafNode]) -> None:
+    def explode(
+        self, prev: Optional[SnailfishLeafNode], upcoming: Optional[SnailfishLeafNode]
+    ) -> None:
         parent = self.parent
         assert parent is not None
         assert isinstance(self.left, SnailfishLeafNode)
@@ -119,15 +86,15 @@ class SnailfishPair(SnailfishNumber):
         elif self == parent.right:
             parent.right = SnailfishLeafNode(parent=parent, value=0)
         else:
-            raise Exception(f"How would you manage to get here")
+            raise Exception(f"How would you manage to get here?")
 
     def split(self, child: SnailfishLeafNode) -> None:
-        left = SnailfishLeafNode(parent=None, value=floor(child.value/2))
-        right = SnailfishLeafNode(parent=None, value=ceil(child.value/2))
+        left = SnailfishLeafNode(parent=None, value=floor(child.value / 2))
+        right = SnailfishLeafNode(parent=None, value=ceil(child.value / 2))
         pair = SnailfishPair(parent=self, left=left, right=right)
         left.parent = pair
         right.parent = pair
-    
+
         if child == self.left:
             self.left = pair
         elif child == self.right:
@@ -138,14 +105,6 @@ class SnailfishPair(SnailfishNumber):
     def nodes(self) -> Iterator[SnailfishLeafNode]:
         yield from self.left.nodes()
         yield from self.right.nodes()
-
-    @property
-    def leftmost(self) -> SnailfishLeafNode:
-        return self.left.leftmost
-
-    @property
-    def rightmost(self) -> SnailfishLeafNode:
-        return self.right.rightmost
 
     @property
     def magnitude(self) -> int:
@@ -161,22 +120,6 @@ class SnailfishLeafNode(SnailfishNumber):
 
     def nodes(self) -> Iterator[SnailfishLeafNode]:
         yield self
-
-    @property
-    def should_explode(self) -> bool:
-        return self.depth > 4
-
-    @property
-    def should_split(self) -> bool:
-        return self.value >= 10 
-
-    @property
-    def leftmost(self) -> SnailfishLeafNode:
-        return self
-
-    @property
-    def rightmost(self) -> SnailfishLeafNode:
-        return self
 
     @property
     def magnitude(self) -> int:

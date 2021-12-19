@@ -12,7 +12,7 @@ class Parser(object):
     depth: int = 0
     index: int = 0
 
-    def get_snailfish_number(self) -> SnailfishNumber:
+    def parse(self) -> SnailfishNumber:
         self.depth = 0
         self.index = 0
 
@@ -60,6 +60,10 @@ class Parser(object):
         return [s if s in ("[", "]") else int(s) for s in strings]
 
     @staticmethod
-    def parse(input: str) -> List[SnailfishNumber]:
+    def parse_all(input: str) -> List[SnailfishNumber]:
         lines = input.strip().splitlines()
-        return [Parser(line).get_snailfish_number() for line in lines if line]
+        return [Parser.parse_snailfish_number(line) for line in lines if line]
+
+    @staticmethod
+    def parse_snailfish_number(line: str) -> SnailfishNumber:
+        return Parser(line).parse()

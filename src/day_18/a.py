@@ -8,7 +8,7 @@ from src.day_18.solver import SnailfishNumber, Solver
 class Day18PartASolver(Solver):
     snailfish_numbers: list[SnailfishNumber]
 
-    @property
+    @cached_property
     def solution(self) -> int:
         return self.sum.magnitude
 

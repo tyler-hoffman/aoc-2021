@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from src.day_20.models import Image
 
 from src.utils.point import Point
 
@@ -7,7 +7,8 @@ from src.utils.point import Point
 @dataclass
 class Data(object):
     algorithm: list[bool]
-    input_image: set[Point]
+    image: Image
+
 
 class Parser(object):
     @staticmethod
@@ -27,7 +28,16 @@ class Parser(object):
         algorithm = Parser.parse_algorithm("".join(algorithm_lines))
         input_image = Parser.input_image_lines_to_set(input_image_lines)
 
-        return Data(algorithm=algorithm, input_image=input_image)
+        return Data(
+            algorithm=algorithm,
+            image=Image(
+                pixels=input_image,
+                min_x=0,
+                min_y=0,
+                max_x=len(input_image_lines[0]),
+                max_y=len(input_image_lines),
+            ),
+        )
         
     @staticmethod
     def parse_algorithm(line: str) -> list[bool]:

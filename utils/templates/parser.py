@@ -3,7 +3,8 @@ from typing import List
 
 
 class Parser(object):
-    def parse(self, input: str) -> List[str]:
+    @staticmethod
+    def parse(input: str) -> List[str]:
         raise NotImplementedError()
 
 """

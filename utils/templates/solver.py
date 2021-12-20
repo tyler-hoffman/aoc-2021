@@ -1,13 +1,10 @@
 SOLVER_TEMPLATE = """
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass
 
 
 @dataclass
 class Solver(ABC):
-    @property
-    @abstractmethod
-    def solution(self) -> int:
-        ...
+    pass
 
 """

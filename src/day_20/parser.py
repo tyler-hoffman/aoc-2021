@@ -32,6 +32,7 @@ class Parser(object):
             algorithm=algorithm,
             image=Image(
                 pixels=input_image,
+                outer_pixels_on=False,
                 min_x=0,
                 min_y=0,
                 max_x=len(input_image_lines[0]),

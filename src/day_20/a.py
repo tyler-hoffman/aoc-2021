@@ -34,26 +34,30 @@ class Day20PartASolver(Solver):
         new_pixels = set[Point]()
         xs = range(min_x, max_x)
         ys = range(min_y, max_y)
+        if image.outer_pixels_on:
+            new_outer_pixels = self.algorithm[-1]
+        else:
+            new_outer_pixels = self.algorithm[0]
         for y, x in product(ys, xs):
             point = Point(x=x, y=y)
             if self.next_pixel_is_on(image, point):
                 new_pixels.add(point)
-        return Image(pixels=new_pixels, min_x=min_x, max_x=max_x, min_y=min_y, max_y=max_y)
+        return Image(pixels=new_pixels, outer_pixels_on=new_outer_pixels, min_x=min_x, max_x=max_x, min_y=min_y, max_y=max_y)
 
     def next_pixel_is_on(self, image: Image, point: Point) -> bool:
-        neighbors = self.neighbors(image.pixels, point)
+        neighbors = self.neighbors(image, point)
         # reversed = neighbors[::-1]
         as_in_str = "".join(["1" if digit else "0" for digit in neighbors])
         index = int(as_in_str, 2)
         return self.algorithm[index]
 
     @staticmethod
-    def neighbors(pixels: set[Point], point: Point) -> list[bool]:
+    def neighbors(image: Image, point: Point) -> list[bool]:
         ys = range(point.y - 1, point.y + 2)
         xs = range(point.x - 1, point.x + 2)
         points = [Point(x=x, y=y) for y, x in product(ys, xs)]
 
-        return [p in pixels for p in points]
+        return [image.is_pixel_on(p) for p in points]
 
 
 def solve(input: str) -> int:

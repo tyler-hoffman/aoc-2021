@@ -16,18 +16,8 @@ class Day18PartBSolver(object):
     @cached_property
     def possible_magnitudes(self) -> set[int]:
         pairs = permutations(self.snailfish_numbers, 2)
-        sums = [self.deep_copy(a) + self.deep_copy(b) for a, b in pairs]
+        sums = [a + b for a, b in pairs]
         return {x.magnitude for x in sums}
-
-    def deep_copy(self, snailfish_number: SnailfishNumber) -> SnailfishNumber:
-        """Make a deep copy of a snailfish number
-
-        It'd probably be more "correct" to make this a method on the SnailfishNumber,
-        which I don't want importing the parser. But this is pretty easy, so we're
-        just copying by serializing/deserializing.
-        """
-        s = str(snailfish_number)
-        return Parser.parse_snailfish_number(s)
 
 
 def solve(input: str) -> int:

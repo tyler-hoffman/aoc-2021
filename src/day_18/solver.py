@@ -13,6 +13,10 @@ class SnailfishNumber(ABC):
     def nodes(self) -> Iterator[SnailfishLeafNode]:
         ...
 
+    @abstractmethod
+    def deep_copy(self) -> SnailfishNumber:
+        ...
+
     @property
     @abstractmethod
     def magnitude(self) -> int:
@@ -54,9 +58,11 @@ class SnailfishNumber(ABC):
     def __add__(self, other: Any) -> SnailfishNumber:
         if not isinstance(other, SnailfishNumber):
             raise Exception(f"Can't add {type(other)} to SnailfishNumber")
-        parent = SnailfishPair(parent=None, left=self, right=other)
-        self.parent = parent
-        other.parent = parent
+        left = self.deep_copy()
+        right = other.deep_copy()
+        parent = SnailfishPair(parent=None, left=left, right=right)
+        left.parent = parent
+        right.parent = parent
         parent.reduce()
         return parent
 
@@ -106,6 +112,15 @@ class SnailfishPair(SnailfishNumber):
         yield from self.left.nodes()
         yield from self.right.nodes()
 
+    def deep_copy(self) -> SnailfishPair:
+        left = self.left.deep_copy()
+        right = self.right.deep_copy()
+        pair = SnailfishPair(left=left, right=right, parent=None)
+        left.parent = pair
+        right.parent = pair
+
+        return pair
+
     @property
     def magnitude(self) -> int:
         return 3 * self.left.magnitude + 2 * self.right.magnitude
@@ -120,6 +135,9 @@ class SnailfishLeafNode(SnailfishNumber):
 
     def nodes(self) -> Iterator[SnailfishLeafNode]:
         yield self
+
+    def deep_copy(self) -> SnailfishLeafNode:
+        return SnailfishLeafNode(value=self.value, parent=None)
 
     @property
     def magnitude(self) -> int:

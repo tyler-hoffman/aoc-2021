@@ -24,6 +24,7 @@ class PlayerState(object):
         score = self.score + position + 1
         return PlayerState(position=position, score=score)
 
+
 @dataclass(frozen=True)
 class GameState(object):
     player_a: PlayerState

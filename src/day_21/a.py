@@ -18,7 +18,7 @@ class Day21PartASolver(Solver):
             to_move = sum([next(rolls) for _ in range(3)])
             game_state = game_state.move(to_move)
             roll_count += 3
-        
+
         if game_state.player_a_won:
             return game_state.player_b.score * roll_count
         else:

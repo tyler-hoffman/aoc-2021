@@ -23,17 +23,3 @@ class Solver(ABC):
             player_b=PlayerState(position=self.starts[1]),
             score_to_win=self.score_to_win,
         )
-
-    @property
-    def max_score(self) -> int:
-        return max([p.score for p in self.players])
-
-    @cached_property
-    def players(self) -> tuple[Player]:
-        return tuple([Player(position=p) for p in self.starts])
-
-    def alternating_players(self) -> Iterator[Player]:
-        index = 0
-        while True:
-            yield self.players[index]
-            index = (index + 1) % 2

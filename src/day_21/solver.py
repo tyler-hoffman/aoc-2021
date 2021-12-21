@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import Iterator
 
+from src.day_21.models import GameState, PlayerState
+
 
 @dataclass
 class Solver(ABC):
@@ -11,24 +13,16 @@ class Solver(ABC):
 
     @property
     @abstractmethod
-    def dice(self) -> Dice:
+    def score_to_win(self) -> int:
         ...
 
     @cached_property
-    def solution(self) -> int:
-        """Generates positions of each alternating player
-        until we hit >= 1000
-        """
-        roll_sequence = self.dice.rolls()
-        alternating_players = self.alternating_players()
-        while self.max_score < 1000:
-            player = next(alternating_players)
-            rolls = [next(roll_sequence) for _ in range(3)]
-            player.position += sum(rolls)
-            player.position %= 10
-            player.score += player.position + 1
-        loser = next(alternating_players)
-        return loser.score * self.dice.roll_count
+    def starting_state(self) -> GameState:
+        return GameState(
+            player_a=PlayerState(position=self.starts[0]),
+            player_b=PlayerState(position=self.starts[1]),
+            score_to_win=self.score_to_win,
+        )
 
     @property
     def max_score(self) -> int:
@@ -43,22 +37,3 @@ class Solver(ABC):
         while True:
             yield self.players[index]
             index = (index + 1) % 2
-
-
-@dataclass
-class Player(object):
-    position: int
-    score: int = 0
-
-
-class Dice(ABC):
-    roll_count = 0
-
-    def rolls(self) -> Iterator[int]:
-        while True:
-            self.roll_count += 1
-            yield self.next_roll()
-
-    @abstractmethod
-    def next_roll(self) -> int:
-        ...

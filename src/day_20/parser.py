@@ -24,7 +24,7 @@ class Parser(object):
                 list_to_append_to = input_image_lines
             else:
                 list_to_append_to.append(line)
-        
+
         algorithm = Parser.parse_algorithm("".join(algorithm_lines))
         input_image = Parser.input_image_lines_to_set(input_image_lines)
 
@@ -39,10 +39,10 @@ class Parser(object):
                 max_y=len(input_image_lines),
             ),
         )
-        
+
     @staticmethod
     def parse_algorithm(line: str) -> list[bool]:
-        return [ch == '#' for ch in line]
+        return [ch == "#" for ch in line]
 
     @staticmethod
     def input_image_lines_to_set(lines: list[str]) -> set[Point]:

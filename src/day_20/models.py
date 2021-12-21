@@ -25,5 +25,5 @@ class Image(object):
         for y in ys:
             chars = ["#" if Point(x=x, y=y) in self.pixels else "." for x in xs]
             lines.append("".join(chars))
-            
+
         return "\n".join(lines)

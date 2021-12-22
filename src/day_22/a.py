@@ -28,45 +28,21 @@ class Day22PartASolver(Solver):
 
     @cached_property
     def bounded_instructions(self) -> list[Instruction]:
+        bounded_cuboids = [
+            self.valid_range.intersection(i.cuboid) for i in self.instructions
+        ]
         return [
-            Instruction(cuboid=self.cuboid_to_bounds(i.cuboid), on=i.on)
-            for i in self.instructions
-            if self.in_range(i.cuboid)
+            Instruction(cuboid=c, on=i.on)
+            for i, c in zip(self.instructions, bounded_cuboids)
+            if c is not None
         ]
 
-    def cuboid_to_bounds(self, cuboid: Cuboid) -> Cuboid:
+    @cached_property
+    def valid_range(self) -> Cuboid:
         return Cuboid(
-            min=Point3D(
-                x=self.to_range(cuboid.min.x),
-                y=self.to_range(cuboid.min.y),
-                z=self.to_range(cuboid.min.z),
-            ),
-            max=Point3D(
-                x=self.to_range(cuboid.max.x),
-                y=self.to_range(cuboid.max.y),
-                z=self.to_range(cuboid.max.z),
-            ),
+            min=Point3D(-50, -50, -50),
+            max=Point3D(50, 50, 50),
         )
-
-    def in_range(self, cuboid: Cuboid) -> bool:
-        return all(
-            [
-                cuboid.min.x <= 50,
-                cuboid.min.z <= 50,
-                cuboid.min.z <= 50,
-                cuboid.max.x >= -50,
-                cuboid.max.y >= -50,
-                cuboid.max.z >= -50,
-            ]
-        )
-
-    def to_range(self, value: int) -> int:
-        if value > 50:
-            return 50
-        elif value < -50:
-            return -50
-        else:
-            return value
 
 
 def solve(input: str) -> int:

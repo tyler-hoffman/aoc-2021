@@ -33,12 +33,3 @@ class Cuboid(object):
             yield Point3D(x=x, y=y, z=z)
 
         return output
-
-    def is_valid(self) -> bool:
-        return all(
-            [
-                self.max.x >= self.min.x,
-                self.max.y >= self.min.y,
-                self.max.z >= self.min.z,
-            ]
-        )

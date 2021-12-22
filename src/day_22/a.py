@@ -28,15 +28,10 @@ class Day22PartASolver(Solver):
 
     @cached_property
     def bounded_instructions(self) -> list[Instruction]:
-        bounded_instructions = [
+        return [
             Instruction(cuboid=self.cuboid_to_bounds(i.cuboid), on=i.on)
             for i in self.instructions
             if self.in_range(i.cuboid)
-        ]
-        return [
-            instruction
-            for instruction in bounded_instructions
-            if instruction.cuboid.is_valid
         ]
 
     def cuboid_to_bounds(self, cuboid: Cuboid) -> Cuboid:

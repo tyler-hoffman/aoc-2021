@@ -77,15 +77,16 @@ class Cuboid(object):
 
     @property
     def is_valid(self) -> bool:
-        return all([
-            self.max.x >= self.min.x,
-            self.max.y >= self.min.y,
-            self.max.z >= self.min.z,
-        ])
+        return all(
+            [
+                self.max.x >= self.min.x,
+                self.max.y >= self.min.y,
+                self.max.z >= self.min.z,
+            ]
+        )
 
     def cuboids_after_removing(self, other: Cuboid) -> set[Cuboid]:
-        """Take 2 cuboids
-        """
+        """Take 2 cuboids"""
         intersection = self.intersection(other)
         if intersection is None:
             return [self]
@@ -101,18 +102,19 @@ class Cuboid(object):
 
         output = set[Cuboid]()
         for x_index, y_index, z_index in product(indices, indices, indices):
-            output.add(Cuboid(
-                min=Point3D(
-                    x=x_mins[x_index],
-                    y=y_mins[y_index],
-                    z=z_mins[z_index],
-                ),
-                max=Point3D(
-                    x=x_maxs[x_index],
-                    y=y_maxs[y_index],
-                    z=z_maxs[z_index],
-                ),
-            ))
+            output.add(
+                Cuboid(
+                    min=Point3D(
+                        x=x_mins[x_index],
+                        y=y_mins[y_index],
+                        z=z_mins[z_index],
+                    ),
+                    max=Point3D(
+                        x=x_maxs[x_index],
+                        y=y_maxs[y_index],
+                        z=z_maxs[z_index],
+                    ),
+                )
+            )
 
         return {c for c in output if c.is_valid and c != intersection}
-

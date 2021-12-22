@@ -7,7 +7,22 @@ from src.day_22.models import Cuboid, Instruction
 
 @dataclass
 class Solver(ABC):
+    """Solver for day 22.
+
+    The approach here is basically to maintain a list of cuboids that
+    are entirely on. If we are adding a new cuboid that overlaps
+    an existing one, we break up existing one, remove the intersection,
+    and keep the non-intersecting sub-cuboids along with the new on one.
+    For remove instructions that overlap existing on cuboids,
+    we break up the existing one and remove the intersection.
+    """
+
     instructions: list[Instruction]
+
+    @property
+    @abstractmethod
+    def bounded_instructions(self) -> list[Instruction]:
+        ...
 
     @property
     def solution(self) -> int:
@@ -34,8 +49,3 @@ class Solver(ABC):
             non_overlapping_cuboids = new_non_overlapping_cuboids
 
         return non_overlapping_cuboids
-
-    @property
-    @abstractmethod
-    def bounded_instructions(self) -> list[Instruction]:
-        ...

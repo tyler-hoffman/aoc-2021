@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from functools import cached_property
 from itertools import product
 from typing import Iterator, Optional
 
@@ -31,6 +32,10 @@ class Cuboid(object):
             yield Point3D(x=x, y=y, z=z)
 
     def intersection(self, other: Cuboid) -> Optional[Cuboid]:
+        """Intersection of this cuboid and another
+
+        If no intersection found returns None
+        """
         if self.has_intersection(other):
             return Cuboid(
                 min=Point3D(
@@ -59,23 +64,23 @@ class Cuboid(object):
             ]
         )
 
-    @property
+    @cached_property
     def volume(self) -> int:
         return self.x_range * self.y_range * self.z_range
 
-    @property
+    @cached_property
     def x_range(self) -> int:
         return self.max.x - self.min.x + 1
 
-    @property
+    @cached_property
     def y_range(self) -> int:
         return self.max.y - self.min.y + 1
 
-    @property
+    @cached_property
     def z_range(self) -> int:
         return self.max.z - self.min.z + 1
 
-    @property
+    @cached_property
     def is_valid(self) -> bool:
         return all(
             [
@@ -86,10 +91,25 @@ class Cuboid(object):
         )
 
     def cuboids_after_removing(self, other: Cuboid) -> set[Cuboid]:
-        """Take 2 cuboids"""
+        """Find cuboids left after removing another
+
+        If there is no intersection, we can return this entire cubnoid.
+        If there is an intersection:
+        - Assume that `other` is entirely within this cuboid
+        - Split this cuboid along the edges of `other`, creating a 3x3x3
+          set of sub-cuboids with the intersection at the middle
+        - Filter out any invalid sub-cuboids (these occur if the `other` isn't actually
+          entirely within this cuboid (e.g. if it intersects with one of the edges of
+          this cuboid))
+        - Filter out the intersection, since that's what we're really trying to remove here
+
+        NOTE: We could probably be more clever and return fewer cuboids here if some could
+              be merged together, but that optimization doesn't seem to be needed for a
+              reasonable runtime
+        """
         intersection = self.intersection(other)
         if intersection is None:
-            return [self]
+            return {self}
 
         x_mins = [self.min.x, intersection.min.x, intersection.max.x + 1]
         x_maxs = [intersection.min.x - 1, intersection.max.x, self.max.x]
@@ -98,9 +118,8 @@ class Cuboid(object):
         z_mins = [self.min.z, intersection.min.z, intersection.max.z + 1]
         z_maxs = [intersection.min.z - 1, intersection.max.z, self.max.z]
 
-        indices = list(range(3))
-
         output = set[Cuboid]()
+        indices = list(range(3))
         for x_index, y_index, z_index in product(indices, indices, indices):
             output.add(
                 Cuboid(

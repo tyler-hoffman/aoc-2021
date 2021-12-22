@@ -11,20 +11,25 @@ class Day22PartASolver(Solver):
 
     @property
     def solution(self) -> int:
-        return len(self.all_on_points)
+        return sum([c.volume for c in self.all_on_cuboids])
 
     @cached_property
-    def all_on_points(self) -> set[Point3D]:
-        output = set[Point3D]()
+    def all_on_cuboids(self) -> set[Cuboid]:
+        non_overlapping_cuboids = set[Cuboid]()
 
         for instruction in self.bounded_instructions:
-            for point in instruction.cuboid.all_contained_points():
-                if instruction.on:
-                    output.add(point)
-                elif point in output:
-                    output.remove(point)
+            new_non_overlapping_cuboids = set[Cuboid]()
+            cuboid = instruction.cuboid
+            if instruction.on:
+                for other in non_overlapping_cuboids:
+                    new_non_overlapping_cuboids.update(other.cuboids_after_removing(cuboid))
+                new_non_overlapping_cuboids.add(cuboid)
+            else:
+                for other in non_overlapping_cuboids:
+                    new_non_overlapping_cuboids.update(other.cuboids_after_removing(cuboid))
+            non_overlapping_cuboids = new_non_overlapping_cuboids
 
-        return output
+        return non_overlapping_cuboids
 
     @cached_property
     def bounded_instructions(self) -> list[Instruction]:

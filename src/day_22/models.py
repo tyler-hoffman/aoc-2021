@@ -99,7 +99,7 @@ class Cuboid(object):
         - Split this cuboid along the edges of `other`, creating a 3x3x3
           set of sub-cuboids with the intersection at the middle
         - Filter out any invalid sub-cuboids (these occur if the `other` isn't actually
-          entirely within this cuboid (e.g. if it intersects with one of the edges of
+          entirely within this cuboid (i.e. if it intersects with one of the edges of
           this cuboid))
         - Filter out the intersection, since that's what we're really trying to remove here
 

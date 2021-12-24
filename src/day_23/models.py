@@ -110,14 +110,15 @@ class GameState(object):
     @cache
     def potential_moves_for_amphipod(self, amphipod: Amphipod) -> set[Point]:
         hall_y = self.structure_constraints.hall_y
+        has_wrong_type_in_amphipods_room = self.has_wrong_amphipod_in_room(amphipod.type)
+
         if amphipod.moves_so_far >= 2:
             targets = []
-        if amphipod.position.y == hall_y:
+        if amphipod.position.y == hall_y and not has_wrong_type_in_amphipods_room:
             # need to go home
-            targets = self.structure_constraints.rooms_for_type(amphipod.type)
-        elif self.is_home(amphipod) and not self.has_wrong_amphipod_in_room(
-            amphipod.type
-        ):
+            target = self.lowest_unoccupied_room_for_type(amphipod.type)
+            targets = [target] if target else []
+        elif self.is_home(amphipod) and not has_wrong_type_in_amphipods_room:
             # maybe scoot down
             targets = self.structure_constraints.rooms_for_type(amphipod.type)
             targets = [t for t in targets if t.y > amphipod.position.y]
@@ -140,6 +141,17 @@ class GameState(object):
             if self.can_get_to(amphipod, target):
                 output.add(target)
         return output
+
+    @cache
+    def lowest_unoccupied_room_for_type(self, type: str) -> Optional[Point]:
+        rooms = self.structure_constraints.rooms_for_type(type)
+        unoccupied_rooms = [r for r in rooms if r not in self.occupied_points]
+
+        if len(unoccupied_rooms) > 0:
+            return unoccupied_rooms[-1]
+        else:
+            return None
+
 
     def can_get_to(self, amphipod: Amphipod, pos: Point) -> bool:
         hall_y = self.structure_constraints.hall_y

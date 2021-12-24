@@ -5,6 +5,7 @@ from src.day_23.models import GameState
 
 infinity = float("inf")
 
+
 @dataclass
 class Solver(object):
     start_state: GameState

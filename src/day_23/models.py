@@ -29,13 +29,16 @@ class GameState(object):
                 things = [a for a in self.amphipods if a.position == p]
                 if len(things) == 1:
                     chars.append(things[0].type)
-                elif p in self.structure_constraints.room_points or p in self.structure_constraints.hall_points:
+                elif (
+                    p in self.structure_constraints.room_points
+                    or p in self.structure_constraints.hall_points
+                ):
                     chars.append(" ")
                 else:
                     chars.append("#")
 
             lines.append("".join(chars))
-        
+
         lines.append(f"cost: {self.cost_so_far}")
         lines.append("")
 
@@ -110,7 +113,9 @@ class GameState(object):
     @cache
     def potential_moves_for_amphipod(self, amphipod: Amphipod) -> set[Point]:
         hall_y = self.structure_constraints.hall_y
-        has_wrong_type_in_amphipods_room = self.has_wrong_amphipod_in_room(amphipod.type)
+        has_wrong_type_in_amphipods_room = self.has_wrong_amphipod_in_room(
+            amphipod.type
+        )
 
         if amphipod.moves_so_far >= 2:
             targets = []
@@ -153,7 +158,6 @@ class GameState(object):
             return unoccupied_rooms[-1]
         else:
             return None
-
 
     def can_get_to(self, amphipod: Amphipod, pos: Point) -> bool:
         hall_y = self.structure_constraints.hall_y

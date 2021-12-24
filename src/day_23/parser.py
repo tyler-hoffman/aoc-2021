@@ -10,6 +10,7 @@ GARBAGE_PLACEHOLDER_LINE
   #D#B#A#C#
 """
 
+
 class Parser(object):
     @staticmethod
     def parse(input: str) -> GameState:

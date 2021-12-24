@@ -22,7 +22,7 @@ class GameState(object):
     def __repr__(self) -> str:
         lines = []
 
-        for y in range(5):
+        for y in range(7):
             chars = []
             for x in range(13):
                 p = Point(x=x, y=y)

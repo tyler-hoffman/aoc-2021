@@ -14,7 +14,6 @@ class GameState(object):
     structure_constraints: StructureConstraints
     amphipods: frozenset[Amphipod]
     cost_so_far: int = field(default=0, compare=False)
-    prev: Optional[GameState] = field(default=None, compare=False)
 
     def __lt__(self, other: GameState) -> bool:
         return self.optimistic_total_cost < other.optimistic_total_cost
@@ -46,15 +45,6 @@ class GameState(object):
         lines.append("")
 
         return "\n".join(lines)
-
-    @cached_property
-    def state_sequence(self) -> list[GameState]:
-        states: list[GameState] = []
-        state = self
-        while state:
-            states.append(state)
-            state = state.prev
-        return states[::-1]
 
     @cached_property
     def optimistic_total_cost(self) -> int:
@@ -207,7 +197,6 @@ class GameState(object):
             structure_constraints=self.structure_constraints,
             amphipods=new_amphipods,
             cost_so_far=new_cost,
-            prev=self,
         )
 
 

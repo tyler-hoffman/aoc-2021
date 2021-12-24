@@ -22,9 +22,12 @@ class GameState(object):
     def __repr__(self) -> str:
         lines = []
 
-        for y in range(7):
+        max_y = 2 + max([p.y for p in self.structure_constraints.room_points])
+        max_x = 2 + max([p.x for p in self.structure_constraints.hall_points])
+
+        for y in range(max_y):
             chars = []
-            for x in range(13):
+            for x in range(max_x):
                 p = Point(x=x, y=y)
                 things = [a for a in self.amphipods if a.position == p]
                 if len(things) == 1:
@@ -113,16 +116,17 @@ class GameState(object):
     @cache
     def potential_moves_for_amphipod(self, amphipod: Amphipod) -> set[Point]:
         hall_y = self.structure_constraints.hall_y
-        has_wrong_type_in_amphipods_room = self.has_wrong_amphipod_in_room(
-            amphipod.type
-        )
 
         if amphipod.moves_so_far >= 2:
             targets = []
-        elif amphipod.position.y == hall_y and not has_wrong_type_in_amphipods_room:
+        elif amphipod.position.y == hall_y and not self.has_wrong_amphipod_in_room(
+            amphipod.type
+        ):
             target = self.lowest_unoccupied_room_for_type(amphipod.type)
             targets = [target] if target else []
-        elif self.is_home(amphipod) and not has_wrong_type_in_amphipods_room:
+        elif self.is_home(amphipod) and not self.has_wrong_amphipod_in_room(
+            amphipod.type
+        ):
             target = self.lowest_unoccupied_room_for_type(amphipod.type)
             targets = [target] if target and target.y > amphipod.position.y else []
         elif self.is_home(amphipod) and amphipod.moves_so_far == 0:

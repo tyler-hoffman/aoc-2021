@@ -11,4 +11,4 @@ class TestDay23B(unittest.TestCase):
     def test_solution(self):
         with open("src/day_23/input.txt", "r") as f:
             input = f.read()
-            self.assertEqual(solve(input), -1)
+            self.assertEqual(solve(input), 53308)

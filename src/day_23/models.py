@@ -13,16 +13,50 @@ AMPHIPOD_TYPES: frozenset[str] = frozenset(["A", "B", "C", "D"])
 class GameState(object):
     structure_constraints: StructureConstraints
     amphipods: frozenset[Amphipod]
-    cost: int = field(default=0)
+    cost_so_far: int = field(default=0, compare=False)
+    prev: Optional[GameState] = field(default=None, compare=False)
 
     def __lt__(self, other: GameState) -> bool:
-        if self.cost < other.cost:
-            return True
-        elif self.cost > other.cost:
-            return False
-        else:
-            return self.num_amphipods_at_home > other.num_amphipods_at_home
+        return self.optimistic_total_cost < other.optimistic_total_cost
 
+    def __repr__(self) -> str:
+        lines = []
+
+        for y in range(5):
+            chars = []
+            for x in range(13):
+                p = Point(x=x, y=y)
+                things = [a for a in self.amphipods if a.position == p]
+                if len(things) == 1:
+                    chars.append(things[0].type)
+                elif p in self.structure_constraints.room_points or p in self.structure_constraints.hall_points:
+                    chars.append(" ")
+                else:
+                    chars.append("#")
+
+            lines.append("".join(chars))
+        
+        lines.append(f"cost: {self.cost_so_far}")
+        lines.append("")
+
+        return "\n".join(lines)
+
+    @cached_property
+    def state_sequence(self) -> list[GameState]:
+        states: list[GameState] = []
+        state = self
+        while state:
+            states.append(state)
+            state = state.prev
+        return states[::-1]
+
+    @cached_property
+    def optimistic_total_cost(self) -> int:
+        return self.cost_so_far + self.optimistic_remaining_cost
+
+    @cached_property
+    def optimistic_remaining_cost(self) -> int:
+        return sum([self.dist_home(a) * a.move_cost for a in self.amphipods])
 
     @property
     def done(self) -> bool:
@@ -33,8 +67,21 @@ class GameState(object):
         at_home = {self.is_home(a) for a in self.amphipods}
         return len([x for x in at_home if x])
 
+    def dist_home(self, amphipod: Amphipod) -> int:
+        hall_y = self.structure_constraints.hall_y
+        if self.is_home(amphipod):
+            return 0
+        elif amphipod.position.y == hall_y:
+            home = self.structure_constraints.first_room_for_type(amphipod.type)
+            return amphipod.position.manhattan_dist(home)
+        else:
+            doorway = self.structure_constraints.doorway_for_type(amphipod.type)
+            return 1 + amphipod.position.manhattan_dist(doorway)
+
     def is_home(self, amphipod: Amphipod) -> bool:
-        return amphipod.position in self.structure_constraints.rooms_for_type(amphipod.type)
+        return amphipod.position in self.structure_constraints.rooms_for_type(
+            amphipod.type
+        )
 
     @cached_property
     def occupied_points(self) -> dict[Point, Amphipod]:
@@ -54,30 +101,41 @@ class GameState(object):
 
     def potential_new_states(self) -> set[GameState]:
         output = set[GameState]()
-        amphids_with_remaining_moves = [a for a in self.amphipods if a.moves_so_far < 2]
-        for amphipod in amphids_with_remaining_moves:
+        for amphipod in self.amphipods:
             points = self.potential_moves_for_amphipod(amphipod)
             for pos in points:
                 output.add(self.move_amphipod(amphipod, pos))
         return output
 
+    @cache
     def potential_moves_for_amphipod(self, amphipod: Amphipod) -> set[Point]:
         hall_y = self.structure_constraints.hall_y
-        output = set[Point]()
+        if amphipod.moves_so_far >= 2:
+            targets = []
         if amphipod.position.y == hall_y:
             # need to go home
             targets = self.structure_constraints.rooms_for_type(amphipod.type)
-        elif self.is_home(amphipod) and not self.has_wrong_amphipod_in_room(amphipod.type):
+        elif self.is_home(amphipod) and not self.has_wrong_amphipod_in_room(
+            amphipod.type
+        ):
             # maybe scoot down
             targets = self.structure_constraints.rooms_for_type(amphipod.type)
             targets = [t for t in targets if t.y > amphipod.position.y]
-        elif self.is_home(amphipod):
+        elif self.is_home(amphipod) and amphipod.moves_so_far == 0:
             targets = self.structure_constraints.rooms_for_type(amphipod.type)
-            targets = [t for t in targets if t.y > amphipod.position.y] + list(self.structure_constraints.valid_hall_positions)
-        else:
+            targets = [t for t in targets if t.y > amphipod.position.y] + list(
+                self.structure_constraints.valid_hall_positions
+            )
+        elif self.is_home(amphipod) and amphipod.moves_so_far == 1:
+            targets = self.structure_constraints.rooms_for_type(amphipod.type)
+            targets = [t for t in targets if t.y > amphipod.position.y]
+        elif amphipod.moves_so_far == 0:
             # move out of room
             targets = self.structure_constraints.valid_hall_positions
+        else:
+            targets = []
 
+        output = set[Point]()
         for target in targets:
             if self.can_get_to(amphipod, target):
                 output.add(target)
@@ -88,11 +146,16 @@ class GameState(object):
         if amphipod.position.y == hall_y and pos.y != hall_y:
             # Go home
             doorway = self.structure_constraints.doorway_for_type(amphipod.type)
-            return self.can_move_horizontally_to(amphipod.position, doorway) and self.can_move_vertically_to(doorway, pos)
+            return self.can_move_horizontally_to(
+                amphipod.position, doorway
+            ) and self.can_move_vertically_to(doorway, pos)
         elif amphipod.position.y != hall_y and pos.y == hall_y:
-            # Leave home
-            doorway = self.structure_constraints.doorway_for_type(amphipod.type)
-            return self.can_move_vertically_to(amphipod.position, doorway) and self.can_move_horizontally_to(doorway, pos)
+            # Leave room
+            doorway = Point(x=amphipod.position.x, y=hall_y)
+            # doorway = self.structure_constraints.doorway_for_type(amphipod.type)
+            return self.can_move_vertically_to(
+                amphipod.position, doorway
+            ) and self.can_move_horizontally_to(doorway, pos)
         elif amphipod.position.x == pos.x:
             # move rooms
             return self.can_move_vertically_to(amphipod.position, pos)
@@ -122,14 +185,16 @@ class GameState(object):
         return True
 
     def move_amphipod(self, amphipod: Amphipod, pos: Point) -> GameState:
+        cost_to_move = amphipod.cost_to_move_to(pos)
         new_amphipod = amphipod.move_to(pos)
         new_amphipods = self.amphipods.difference({amphipod}).union({new_amphipod})
-        new_cost = self.cost + amphipod.cost_to_move_to(pos)
+        new_cost = self.cost_so_far + cost_to_move
 
         return GameState(
             structure_constraints=self.structure_constraints,
             amphipods=new_amphipods,
-            cost=new_cost,
+            cost_so_far=new_cost,
+            prev=self,
         )
 
 
@@ -186,7 +251,11 @@ class Amphipod(object):
     moves_so_far: int = 0
 
     def move_to(self, pos: Point) -> Amphipod:
-        return Amphipod(type=self.type, position=self.position + pos, moves_so_far=self.moves_so_far+1)
+        return Amphipod(
+            type=self.type,
+            position=pos,
+            moves_so_far=self.moves_so_far + 1,
+        )
 
     def cost_to_move_to(self, p: Point) -> int:
         return self.move_cost * self.position.manhattan_dist(p)

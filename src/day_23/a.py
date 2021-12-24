@@ -5,30 +5,35 @@ from src.day_23.parser import Parser
 from src.day_23.solver import Solver
 
 
+infinity = float("inf")
+
+
 @dataclass
 class Day23PartASolver(Solver):
     start_state: GameState
-    marked: set[GameState] = field(default_factory=set)
-    state_queue: PriorityQueue[GameState] = field(default_factory=PriorityQueue)
+    marked: dict[GameState, int] = field(default_factory=dict)
+    state_queue: PriorityQueue[tuple[int, GameState]] = field(
+        default_factory=PriorityQueue
+    )
 
     @property
     def solution(self) -> int:
         self.add_to_queue(self.start_state)
         while True:
-            state = self.state_queue.get()
+            _, state = self.state_queue.get()
             if state.done:
-                return state.cost
+                return state.cost_so_far
             else:
                 self.expand(state)
 
     def expand(self, game_state: GameState) -> None:
         for state in game_state.potential_new_states():
-            if state not in self.marked:
+            if state.optimistic_total_cost < self.marked.get(state, infinity):
                 self.add_to_queue(state)
 
     def add_to_queue(self, state: GameState) -> None:
-        self.marked.add(state)
-        self.state_queue.put(state)
+        self.marked[state] = state.optimistic_total_cost
+        self.state_queue.put((state.optimistic_total_cost, state))
 
 
 def solve(input: str) -> int:

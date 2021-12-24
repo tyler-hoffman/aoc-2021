@@ -120,25 +120,16 @@ class GameState(object):
         if amphipod.moves_so_far >= 2:
             targets = []
         elif amphipod.position.y == hall_y and not has_wrong_type_in_amphipods_room:
-            # need to go home
             target = self.lowest_unoccupied_room_for_type(amphipod.type)
             targets = [target] if target else []
         elif self.is_home(amphipod) and not has_wrong_type_in_amphipods_room:
             target = self.lowest_unoccupied_room_for_type(amphipod.type)
-            if target and target.y > amphipod.position.y:
-                return [target]
-            else:
-                return []
+            targets = [target] if target and target.y > amphipod.position.y else []
         elif self.is_home(amphipod) and amphipod.moves_so_far == 0:
-            targets = self.structure_constraints.rooms_for_type(amphipod.type)
-            targets = [t for t in targets if t.y > amphipod.position.y] + list(
-                self.structure_constraints.valid_hall_positions
-            )
-        elif self.is_home(amphipod) and amphipod.moves_so_far == 1:
-            targets = self.structure_constraints.rooms_for_type(amphipod.type)
-            targets = [t for t in targets if t.y > amphipod.position.y]
+            target = self.lowest_unoccupied_room_for_type(amphipod.type)
+            targets = [target] if target and target.y > amphipod.position.y else []
+            targets += list(self.structure_constraints.valid_hall_positions)
         elif amphipod.moves_so_far == 0:
-            # move out of room
             targets = self.structure_constraints.valid_hall_positions
         else:
             targets = []

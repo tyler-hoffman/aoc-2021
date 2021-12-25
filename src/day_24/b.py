@@ -8,7 +8,7 @@ from src.day_24.solver import Solver
 
 
 @dataclass
-class Day24PartASolver(Solver):
+class Day24PartBSolver(Solver):
     modules: list[Module]
     visited: set[tuple[int, int]] = field(default_factory=set)
 
@@ -24,13 +24,13 @@ class Day24PartASolver(Solver):
         if cachable in self.visited:
             pass
         elif index == 14:
-            if z  == 0:
+            if z == 0:
                 yield so_far
         elif index < 14:
             self.visited.add(cachable)
             module = self.modules[index]
-            ws_to_output_zs = module.ws_to_output_zs(z, list(range(1, 10)))
-            for w, output_z in sorted(ws_to_output_zs.items(), reverse=True):
+            ws_to_output_zs = module.ws_to_output_zs(z, list(range(9, 0, -1)))
+            for w, output_z in sorted(ws_to_output_zs.items(), reverse=False):
                 so_far.append(w)
                 yield from self.solve(so_far, output_z)
                 so_far.pop()
@@ -41,7 +41,7 @@ class Day24PartASolver(Solver):
 
 def solve(input: str) -> int:
     modules = Parser.parse(input)
-    solver = Day24PartASolver(modules)
+    solver = Day24PartBSolver(modules)
 
     return solver.solution
 

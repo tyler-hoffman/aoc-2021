@@ -2,6 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
+from functools import cached_property
 
 
 @dataclass(frozen=True)
@@ -89,13 +90,13 @@ class Module(object):
         y2 = (w + self.c) * x
         return (z // self.a) * y1 + y2
 
-    def ws_to_output_zs(self, z: int) -> dict[int, int]:
+    def ws_to_output_zs(self, z: int, ws_to_check_in_order: list[int]) -> dict[int, int]:
         """Computes a mapping of input w -> z without duplicate zs
 
         if 2 ws produce the same z, we pick the larger w
         """
         outputs_to_high_w = dict[int, int]()
-        for w in range(1, 10):
+        for w in ws_to_check_in_order:
             output_z = self.new_z_for_w(z, w)
             outputs_to_high_w[output_z] = w
         

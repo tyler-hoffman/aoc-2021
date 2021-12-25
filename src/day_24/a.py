@@ -1,21 +1,41 @@
 from dataclasses import dataclass
-from src.day_24.models import Operator
+from functools import cache
+from more_itertools import first
+from typing import Callable, Iterable
+from src.day_24.models import Module, Operator
 from src.day_24.parser import Parser
 from src.day_24.solver import Solver
 
 
 @dataclass
 class Day24PartASolver(Solver):
-    instructions: list[Operator]
+    modules: list[Module]
 
     @property
     def solution(self) -> int:
-        return -1
+        winner = first(self.solve([], 0))
+
+        return int("".join([str(x) for x in winner]))
+
+    def solve(self, so_far: list[int], z: int) -> Iterable[list[int]]:
+        index = len(so_far)
+        if index == 14 and z == 0:
+            yield so_far
+        elif index < 14:
+            module = self.modules[index]
+            ws_to_output_zs = module.ws_to_output_zs(z)
+            for w, output_z in sorted(ws_to_output_zs.items(), reverse=True):
+                so_far.append(w)
+                yield from self.solve(so_far, output_z)
+                so_far.pop()
+
+
+
 
 
 def solve(input: str) -> int:
-    instructions = Parser(input).parse()
-    solver = Day24PartASolver(instructions=instructions)
+    modules = Parser.parse(input)
+    solver = Day24PartASolver(modules)
 
     return solver.solution
 

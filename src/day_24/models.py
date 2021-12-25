@@ -76,3 +76,28 @@ class BinaryOperator(Operator):
                 return {self.sets, second}
             case _:
                 return {self.sets}
+
+@dataclass(frozen=True)
+class Module(object):
+    a: int
+    b: int
+    c: int
+
+    def new_z_for_w(self, z: int, w: int) -> int:
+        x = int(w != self.b + z % 26)
+        y1 = 25 * x + 1
+        y2 = (w + self.c) * x
+        return (z // self.a) * y1 + y2
+
+    def ws_to_output_zs(self, z: int) -> dict[int, int]:
+        """Computes a mapping of input w -> z without duplicate zs
+
+        if 2 ws produce the same z, we pick the larger w
+        """
+        outputs_to_high_w = dict[int, int]()
+        for w in range(1, 10):
+            output_z = self.new_z_for_w(z, w)
+            outputs_to_high_w[output_z] = w
+        
+        return {w: z for z, w in outputs_to_high_w.items()}
+

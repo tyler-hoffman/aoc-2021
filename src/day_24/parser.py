@@ -1,24 +1,23 @@
 from __future__ import annotations
-from dataclasses import dataclass
 
-from src.day_24.models import BinaryOperator, BinaryOperatorType, InputOperator, Operator
+from src.day_24.models import Module
 
 
-@dataclass
 class Parser(object):
-    input: str
-    operator_count: int = -1
+    lines_per_module = 18
 
-    def parse(self) -> list[Operator]:
-        self.operator_count = -1 
-        lines = self.input.strip().splitlines()
-        return [self.parse_line(line) for line in lines]
+    @staticmethod
+    def parse(input: str) -> list[Module]:
+        output = list[Module]()
 
-    def parse_line(self, line: str) -> Operator:
-        match line.split():
-            case ("inp", sets):
-                self.operator_count += 1
-                return InputOperator(sets=sets, index=self.operator_count)
-            case (operator, sets, second):
-                return BinaryOperator(binary_operator_type=BinaryOperatorType[operator.upper()], sets=sets, second=second)
+        lines = input.strip().splitlines()
+        module_count = len(lines) // Parser.lines_per_module
 
+        for index in range(module_count):
+            start = index * Parser.lines_per_module
+            a = int(lines[start + 4].split()[2])
+            b = int(lines[start + 5].split()[2])
+            c = int(lines[start + 15].split()[2])
+            output.append(Module(a, b, c))
+
+        return output

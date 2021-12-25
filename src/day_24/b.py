@@ -17,7 +17,6 @@ class Day24PartBSolver(Solver):
         winner = first(self.solve([], 0))
         return int("".join([str(x) for x in winner]))
 
-
     def solve(self, so_far: list[int], z: int) -> Iterable[list[int]]:
         index = len(so_far)
         cachable = (index, z)
@@ -34,9 +33,6 @@ class Day24PartBSolver(Solver):
                 so_far.append(w)
                 yield from self.solve(so_far, output_z)
                 so_far.pop()
-
-
-
 
 
 def solve(input: str) -> int:

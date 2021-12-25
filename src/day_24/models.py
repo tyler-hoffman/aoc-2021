@@ -47,6 +47,7 @@ class BinaryOperatorType(Enum):
     MOD = 4
     EQL = 5
 
+
 @dataclass(frozen=True)
 class Operator(ABC):
     sets: str
@@ -65,6 +66,7 @@ class InputOperator(Operator):
     def depends(self) -> set[str]:
         return set()
 
+
 @dataclass(frozen=True)
 class BinaryOperator(Operator):
     second: int | str
@@ -78,6 +80,7 @@ class BinaryOperator(Operator):
             case _:
                 return {self.sets}
 
+
 @dataclass(frozen=True)
 class Module(object):
     a: int
@@ -90,7 +93,9 @@ class Module(object):
         y2 = (w + self.c) * x
         return (z // self.a) * y1 + y2
 
-    def ws_to_output_zs(self, z: int, ws_to_check_in_order: list[int]) -> dict[int, int]:
+    def ws_to_output_zs(
+        self, z: int, ws_to_check_in_order: list[int]
+    ) -> dict[int, int]:
         """Computes a mapping of input w -> z without duplicate zs
 
         if 2 ws produce the same z, we pick the larger w
@@ -99,6 +104,5 @@ class Module(object):
         for w in ws_to_check_in_order:
             output_z = self.new_z_for_w(z, w)
             outputs_to_high_w[output_z] = w
-        
-        return {w: z for z, w in outputs_to_high_w.items()}
 
+        return {w: z for z, w in outputs_to_high_w.items()}

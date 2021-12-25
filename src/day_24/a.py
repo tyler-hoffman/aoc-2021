@@ -17,14 +17,13 @@ class Day24PartASolver(Solver):
         winner = first(self.solve([], 0))
         return int("".join([str(x) for x in winner]))
 
-
     def solve(self, so_far: list[int], z: int) -> Iterable[list[int]]:
         index = len(so_far)
         cachable = (index, z)
         if cachable in self.visited:
             pass
         elif index == 14:
-            if z  == 0:
+            if z == 0:
                 yield so_far
         elif index < 14:
             self.visited.add(cachable)
@@ -34,9 +33,6 @@ class Day24PartASolver(Solver):
                 so_far.append(w)
                 yield from self.solve(so_far, output_z)
                 so_far.pop()
-
-
-
 
 
 def solve(input: str) -> int:

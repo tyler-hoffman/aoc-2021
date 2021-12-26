@@ -1,6 +1,5 @@
 import unittest
 
-from .sample_data import SAMPLE_DATA
 from src.day_24.b import solve
 
 

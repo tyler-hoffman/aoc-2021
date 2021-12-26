@@ -1,93 +1,46 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import Enum
-from functools import cached_property
-
-
-@dataclass(frozen=True)
-class State(object):
-    w: int = 0
-    x: int = 0
-    y: int = 0
-    z: int = 0
-
-    def get(self, var: str) -> int:
-        match var:
-            case "w":
-                return self.w
-            case "x":
-                return self.x
-            case "y":
-                return self.y
-            case "z":
-                return self.z
-
-    def set(self, var: str, val: int) -> State:
-        w = self.w
-        x = self.x
-        y = self.y
-        z = self.z
-        match var:
-            case "w":
-                w = val
-            case "x":
-                x = val
-            case "y":
-                y = val
-            case "z":
-                z = val
-        return State(w, x, y, z)
-
-
-class BinaryOperatorType(Enum):
-    ADD = 1
-    MUL = 2
-    DIV = 3
-    MOD = 4
-    EQL = 5
-
-
-@dataclass(frozen=True)
-class Operator(ABC):
-    sets: str
-
-    @property
-    @abstractmethod
-    def depends(self) -> set[str]:
-        ...
-
-
-@dataclass(frozen=True)
-class InputOperator(Operator):
-    index: int
-
-    @property
-    def depends(self) -> set[str]:
-        return set()
-
-
-@dataclass(frozen=True)
-class BinaryOperator(Operator):
-    second: int | str
-    binary_operator_type: BinaryOperatorType
-
-    @property
-    def depends(self) -> set[str]:
-        match self.second:
-            case int() as second:
-                return {self.sets, second}
-            case _:
-                return {self.sets}
 
 
 @dataclass(frozen=True)
 class Module(object):
+    """Simulates a chunk of logic from the input file.
+
+    The input file is essentially 18 lines repeated 14 times
+    with a few small tweaks each time. The "z" variable
+    is the only variable that really carries through to
+    the next "module"; at the start of each, we pull w
+    from input, then clear x and y.
+
+    Here's the breakdown:
+    inp w
+    mul x 0
+    add x z
+    mod x 26
+    div z 1    # the `1` here varies. Call it `a`
+    add x 10   # the `10` here varies. Call it `b`
+    eql x w
+    eql x 0
+    mul y 0
+    add y 25
+    mul y x
+    add y 1
+    mul z y
+    mul y 0
+    add y w
+    add y 10   # the `10` here varies. Call it `c`
+    mul y x
+    add z y
+    """
+
     a: int
     b: int
     c: int
 
     def new_z_for_w(self, z: int, w: int) -> int:
+        """For a given z and value w will get,
+        execute the above lines of code.
+        """
         x = int(w != self.b + z % 26)
         y1 = 25 * x + 1
         y2 = (w + self.c) * x
